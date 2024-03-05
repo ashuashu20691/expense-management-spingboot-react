@@ -5,6 +5,7 @@ import { tokens } from '../../theme';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { Helmet } from 'react-helmet';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const ExpenseEdit = () => {
   const { id } = useParams();
@@ -20,7 +21,7 @@ const ExpenseEdit = () => {
 
   useEffect(() => {
     // Fetch expense data for the given id
-    fetch(`http://localhost:8080/api/expenses/${id}`)
+    fetch(apiUrl + `/api/expenses/${id}`)
       .then(response => response.json())
       .then(data => setExpense(data))
       .catch(error => console.error('Error fetching expense data:', error));
@@ -34,7 +35,7 @@ const ExpenseEdit = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Update expense data
-    fetch(`http://localhost:8080/api/expenses/${id}`, {
+    fetch(apiUrl + `/api/expenses/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Grid } from '@mui/material';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const ExpenseForm = () => {
   const [amount, setAmount] = useState('');
@@ -21,7 +22,7 @@ const ExpenseForm = () => {
 
     // Send the data to the API
     try {
-      const response = await fetch('http://localhost:8080/api/expenses', {
+      const response = await fetch(apiUrl + '/api/expenses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

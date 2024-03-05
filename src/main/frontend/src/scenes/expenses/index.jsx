@@ -5,6 +5,7 @@ import { tokens } from '../../theme';
 import Header from '../../components/Header';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const Expenses = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const Expenses = () => {
 
   useEffect(() => {
     // Fetch expense data from API
-    fetch('http://localhost:8080/api/expenses')
+    fetch(apiUrl + '/api/expenses')
       .then(response => response.json())
       .then(data => setExpenses(data))
       .catch(error => console.error('Error fetching expense data:', error));
@@ -23,7 +24,7 @@ const Expenses = () => {
 
   const handleDelete = (id) => {
     // Delete expense data
-    fetch(`http://localhost:8080/api/expenses/${id}`, {
+    fetch(apiUrl + `/api/expenses/${id}`, {
       method: 'DELETE',
     })
       .then(response => {

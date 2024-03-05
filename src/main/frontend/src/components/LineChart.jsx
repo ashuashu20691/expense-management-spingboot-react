@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const LineChart = () => {
   const [expenses, setExpenses] = useState([]);
@@ -12,7 +13,7 @@ const LineChart = () => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/expenses');
+        const response = await fetch(apiUrl + '/api/expenses');
         const data = await response.json();
         setExpenses(data);
         
