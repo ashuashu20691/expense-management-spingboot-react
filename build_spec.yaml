@@ -4,11 +4,8 @@ timeoutInSeconds: 6000
 runAs: root
 shell: bash
 env:
-  # these are local variables to the build config
   variables:
-  # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   vaultVariables:
-  # exportedVariables are made available to use as parameters in successor Build Pipeline stages
   exportedVariables:
     - BUILDRUN_HASH
 
@@ -16,21 +13,21 @@ steps:
   - type: Command
     name: "Define unique image tag"
     timeoutInSeconds: 40
-    commands: # Ensure this is 'commands', not 'command' if specifying multiple commands or using a multiline script.
-      - echo "Starting to define unique image tag..."
-      - export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
-      - echo "BUILDRUN_HASH: $BUILDRUN_HASH"
-      - echo "Unique image tag defined."
+    command: |
+      echo "Starting to define unique image tag..." &&
+      export BUILDRUN_HASH=$(echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7) &&
+      echo "BUILDRUN_HASH: $BUILDRUN_HASH" &&
+      echo "Unique image tag defined."
 
   - type: Command
     timeoutInSeconds: 1200
     name: "Build container image"
-    commands: # Use 'commands' for consistency, especially if the validation expects this field.
-      - echo "Starting to build container image..."
-      - cd ${OCI_PRIMARY_SOURCE_DIR}
-      - echo "Current directory: $(pwd)"
-      - docker build --pull --rm -t expense-mgmt-img .
-      - echo "Container image built successfully."
+    command: |
+      echo "Starting to build container image..." &&
+      cd ${OCI_PRIMARY_SOURCE_DIR} &&
+      echo "Current directory: $(pwd)" &&
+      docker build --pull --rm -t expense-mgmt-img . &&
+      echo "Container image built successfully."
 
 outputArtifacts:
   - name: expense_tracker_image
@@ -40,5 +37,3 @@ outputArtifacts:
   - name: oke_deploy_manifest
     type: BINARY
     location: ${OCI_PRIMARY_SOURCE_DIR}/kubernate.yaml
-
-# Notice the indentation and usage of 'commands' instead of 'command' in the steps.
