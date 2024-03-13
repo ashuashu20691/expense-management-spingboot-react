@@ -4,44 +4,42 @@ timeoutInSeconds: 6000
 runAs: root
 shell: bash
 env:
-  # these are local variables to the build config
   variables:
-
-  # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
-  # you can then access the value of that secret in your build_spec.yaml commands
   vaultVariables:
-    
-  # exportedVariables are made available to use as parameters in sucessor Build Pipeline stages
-  # For this Build to run, the Build Pipeline needs to have a BUILDRUN_HASH parameter set
   exportedVariables:
     - BUILDRUN_HASH
-
 
 steps:
   - type: Command
     name: "Define unique image tag"
     timeoutInSeconds: 40
     command: |
+      echo "Starting to define unique image tag..."
       export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
-      echo "BUILDRUN_HASH: " $BUILDRUN_HASH
-      
+      echo "BUILDRUN_HASH: $BUILDRUN_HASH"
+      echo "Unique image tag defined."
 
   - type: Command
     timeoutInSeconds: 1200
     name: "Build container image"
     command: |
+      echo "Starting to build container image..."
       cd ${OCI_PRIMARY_SOURCE_DIR}
-      docker build --pull --rm -t expense-mgmt-img .      
-     
+      echo "Current directory: $(pwd)"
+      docker build --pull --rm -t expense-mgmt-img .
+      echo "Container image built successfully."
+
 outputArtifacts:
   - name: expense_tracker_image
     type: DOCKER_IMAGE
-    # this location tag doesn't effect the tag used to deliver the container image
-    # to the Container Registry
     location: expense-mgmt-img:latest
 
   - name: oke_deploy_manifest
     type: BINARY
-    # this location tag doesn't effect the tag used to deliver the container image
-    # to the Container Registry
     location: ${OCI_PRIMARY_SOURCE_DIR}/kubernate.yaml
+
+# Adding a final step to echo completion just for clarity
+  - type: Command
+    name: "Final step"
+    command: |
+      echo "Build process completed. Check above logs for details."
