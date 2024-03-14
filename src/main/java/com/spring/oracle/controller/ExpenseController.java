@@ -23,7 +23,7 @@ import com.spring.oracle.model.Expense;
 import com.spring.oracle.repository.ExpenseRepository;
 import com.spring.oracle.service.ExpenseService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
@@ -41,6 +41,12 @@ public class ExpenseController {
         List<Expense> expenses = expenseRepository.findAll();
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
+
+    @GetMapping("/deploy-version")
+    public ResponseEntity<String> getDeployVersion() {
+        return new ResponseEntity<>("0.0.3", HttpStatus.OK);
+    }
+
 
    @GetMapping("/{id}")
     public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
