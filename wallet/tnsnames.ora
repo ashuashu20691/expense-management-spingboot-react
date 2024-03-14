@@ -1,0 +1,12 @@
+javaapptestwallet_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-mumbai-1.oraclecloud.com))(connect_data=(service_name=us3a7wx6ev7txi4_javaapptestwallet_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+javaapptestwallet_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-mumbai-1.oraclecloud.com))(connect_data=(service_name=us3a7wx6ev7txi4_javaapptestwallet_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+javaapptestwallet_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-mumbai-1.oraclecloud.com))(connect_data=(service_name=us3a7wx6ev7txi4_javaapptestwallet_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+javaapptestwallet_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-mumbai-1.oraclecloud.com))(connect_data=(service_name=us3a7wx6ev7txi4_javaapptestwallet_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+javaapptestwallet_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-mumbai-1.oraclecloud.com))(connect_data=(service_name=us3a7wx6ev7txi4_javaapptestwallet_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
