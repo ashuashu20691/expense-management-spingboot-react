@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: expense-tracker
-        image: bom.ocir.io/oraclepartnersas/expense-mgmt-img:${BUILDRUN_HASH}
+        image: bom.ocir.io/oraclepartnersas/expense-mgmt-img:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
