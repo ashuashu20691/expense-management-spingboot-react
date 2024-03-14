@@ -6,6 +6,7 @@ shell: bash
 env:
   # these are local variables to the build config
   variables:
+      BUILDRUN_HASH: "0.0.0.1"
 
   # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   # you can then access the value of that secret in your build_spec.yaml commands
@@ -14,8 +15,6 @@ env:
   # exportedVariables are made available to use as parameters in sucessor Build Pipeline stages
   # For this Build to run, the Build Pipeline needs to have a BUILDRUN_HASH parameter set
   exportedVariables:
-    - BUILDRUN_HASH
-
 
 steps:
   - type: Command
@@ -23,7 +22,6 @@ steps:
     timeoutInSeconds: 40
     command: |
       echo "first step running......."
-      # export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
       echo "BUILDRUN_HASH: " $BUILDRUN_HASH
       
 
