@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import { Box } from '@mui/material';
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const PieChart = () => {
@@ -39,18 +40,19 @@ const PieChart = () => {
             label: 'Expense Amount',
             data: data.map(expense => expense.totalExpense),
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)',
+              'rgba(255, 159, 64, 0.5)',
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
             ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-            ],
-            borderWidth: 1,
+            borderColor: 'rgba(255, 255, 255, 1)',
+            borderWidth: 2,
           }],
         },
         options: {
@@ -62,7 +64,7 @@ const PieChart = () => {
                   const value = context.parsed || 0;
                   const total = context.dataset.data.reduce((a, b) => a + b, 0);
                   const percentage = Math.round((value / total) * 100);
-                  return `${label}: ${value} (${percentage}%)`;
+                  return `${label}: $${value.toFixed(2)} (${percentage}%)`;
                 }
               }
             }
@@ -76,10 +78,15 @@ const PieChart = () => {
   }, [data]);
 
   return (
-    <div>
-      <canvas ref={chartRef} width={400} height={300}></canvas>
-    </div>
+    <Box textAlign="center">
+      <h2>Expenses By Category</h2>
+      <div style={{ width: '900px', height: '900px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <canvas ref={chartRef} width={300} height={300}></canvas>
+      </div>
+    </Box>
   );
+  
+  
 };
 
 export default PieChart;

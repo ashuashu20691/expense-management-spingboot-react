@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Box, useTheme } from '@mui/material';
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const LineChart = () => {
+  const theme = useTheme();
+
   const [expenses, setExpenses] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -67,6 +71,9 @@ const LineChart = () => {
 
   // Options for the brush chart
   const options = {
+      tooltip: {
+        theme: theme.palette.mode === 'dark' ? 'dark' : 'light' // Set tooltip theme based on the current theme mode
+      },
     chart: {
       id: 'chart1',
       toolbar: {
@@ -99,7 +106,7 @@ const LineChart = () => {
 
   return (
     <div>
-      <h2>Brush Chart with Date Selector</h2>
+      <h2>Daily Expenses Gragh</h2>
       <div className="date-picker-container">
         <div className="date-picker">
           <label>Start Date:</label>

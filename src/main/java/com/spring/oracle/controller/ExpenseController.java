@@ -77,6 +77,35 @@ public class ExpenseController {
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
+    @GetMapping("/last-week-expense")
+    public ResponseEntity<Integer> findSumOfLastWeekExpenses() {
+        Integer sum = expenseRepository.findSumOfLastWeekExpenses();
+        return new ResponseEntity<>(sum, HttpStatus.OK);
+    }
+
+    @GetMapping("/last-month-expense")
+    public ResponseEntity<Integer> findTotalExpenseLastMonth() {
+        Integer sum = expenseRepository.findTotalExpenseLastMonth();
+        return new ResponseEntity<>(sum, HttpStatus.OK);
+    }
+
+    @GetMapping("/next-month-pred-expense")
+    public ResponseEntity<Double> predictNextMonthExpenses() {
+        Double sum = expenseRepository.predictNextMonthExpenses();
+        return new ResponseEntity<>(sum, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/total-expense")
+    public ResponseEntity<Integer> findTotalExpenseTillNow() {
+        Integer sum = expenseRepository.findTotalExpenseTillNow();
+        return new ResponseEntity<>(sum, HttpStatus.OK);
+    }
+
+
+
+
+
     @GetMapping("/group-by-month")
     public ResponseEntity<Map<String, List<MonthlyExpenseOverviewDTO>>> getCategoryExpenseOverview() {
         return new ResponseEntity<>(expenseService.getMonthlyExpenseOverview(), HttpStatus.OK);
@@ -87,6 +116,8 @@ public class ExpenseController {
     @PostMapping
     public ResponseEntity<Expense> addExpense(@RequestBody Expense expense) {
         System.out.println(expense.getExpenseDate());
+        // Random random = new Random();
+        // expense.setId(random.nextLong());
         Expense savedExpense = expenseRepository.save(expense);
         return new ResponseEntity<>(savedExpense, HttpStatus.CREATED);
     }

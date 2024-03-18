@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const ExpenseForm = () => {
+  const navigate = useNavigate();
+
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
@@ -31,12 +35,7 @@ const ExpenseForm = () => {
       });
       // Handle response
       if (response.ok) {
-        // Clear form fields
-        setAmount('');
-        setCategory('');
-        setDate('');
-        setDescription('');
-        setError('');
+        navigate(`/expenses`)
       } else {
         throw new Error('Failed to add expense');
       }

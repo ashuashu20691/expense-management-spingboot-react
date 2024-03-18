@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, useTheme, Button } from '@mui/material';
+import { Box, Typography, useTheme, Button, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import Header from '../../components/Header';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { Delete, Edit } from '@mui/icons-material'; // Import icons for edit and delete buttons
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const Expenses = () => {
@@ -48,24 +50,18 @@ const Expenses = () => {
       field: 'edit',
       headerName: 'Edit',
       renderCell: ({ row }) => (
-        <Button
-          variant="outlined"
-          onClick={() => navigate(`/expenses/edit/${row.id}`)}
-        >
-          Edit
-        </Button>
+        <IconButton color="primary" onClick={() => navigate(`/expenses/edit/${row.id}`)}>
+          <Edit />
+        </IconButton>
       ),
     },
     {
       field: 'delete',
       headerName: 'Delete',
       renderCell: ({ row }) => (
-        <Button
-          variant="outlined"
-          onClick={() => handleDelete(row.id)}
-        >
-          Delete
-        </Button>
+        <IconButton color="error" onClick={() => handleDelete(row.id)}>
+          <Delete />
+        </IconButton>
       ),
     },
   ];

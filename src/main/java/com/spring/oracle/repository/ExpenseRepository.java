@@ -21,5 +21,17 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
            "ORDER BY month, e.category")
     List<MonthlyExpenseOverviewDTO> findMonthlyExpensesOverview();
 
+    @Query(value = "SELECT SUM(amount) FROM expenses WHERE expense_date >= TRUNC(SYSDATE) - INTERVAL '7' DAY AND expense_date < TRUNC(SYSDATE) - INTERVAL '1' DAY", nativeQuery = true)
+    Integer findSumOfLastWeekExpenses();
+    
+    @Query("SELECT SUM(e.amount) FROM Expense e WHERE e.expenseDate <= TRUNC(SYSDATE)")
+    Integer findTotalExpenseTillNow();
+
+    @Query("SELECT SUM(e.amount) FROM Expense e WHERE FUNCTION('TO_CHAR', e.expenseDate, 'YYYYMM') = FUNCTION('TO_CHAR', ADD_MONTHS(TRUNC(SYSDATE), -1), 'YYYYMM')")
+    Integer findTotalExpenseLastMonth();
+
+    @Query("SELECT AVG(e.amount) FROM Expense e WHERE FUNCTION('TO_CHAR', e.expenseDate, 'YYYYMM') >= FUNCTION('TO_CHAR', ADD_MONTHS(TRUNC(SYSDATE), -3), 'YYYYMM')")
+    Double predictNextMonthExpenses();
+
 
 }

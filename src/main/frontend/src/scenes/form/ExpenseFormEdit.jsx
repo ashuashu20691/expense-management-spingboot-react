@@ -45,7 +45,7 @@ const ExpenseEdit = () => {
       .then(response => response.json())
       .then(data => {
         console.log('Expense updated successfully:', data);
-        navigate.push('/expenses');
+        navigate(`/expenses`)
       })
       .catch(error => console.error('Error updating expense:', error));
   };
