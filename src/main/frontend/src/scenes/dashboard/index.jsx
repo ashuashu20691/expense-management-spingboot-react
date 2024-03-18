@@ -12,6 +12,8 @@ import BarChart from '../../components/BarChart';
 import ProgressCircle from '../../components/ProgressCircle';
 import { Helmet } from 'react-helmet';
 import { MoneyOff } from '@mui/icons-material';
+const apiUrl = process.env.REACT_APP_API_URL;
+
 
 const Dashboard = () => {
 
@@ -21,23 +23,23 @@ const Dashboard = () => {
   const [predNextMonthSpent, setPredNextMonthSpent] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/expenses/last-month-expense')
+    fetch(apiUrl + '/api/expenses/last-month-expense')
       .then(response => response.json())
       .then(data => setLastMonthSpent(data))
       .catch(error => console.error('Error fetching expense data:', error));
 
-    fetch('http://localhost:8080/api/expenses/last-week-expense')
+    fetch(apiUrl + '/api/expenses/last-week-expense')
     .then(response => response.json())
     .then(data => setLastWeekSpent(data))
     .catch(error => console.error('Error fetching expense data:', error));
 
-    fetch('http://localhost:8080/api/expenses/next-month-pred-expense')
+    fetch(apiUrl + '/api/expenses/next-month-pred-expense')
     .then(response => response.json())
     .then(data => setPredNextMonthSpent(data))
     .catch(error => console.error('Error fetching expense data:', error));
 
 
-    fetch('http://localhost:8080/api/expenses/total-expense')
+    fetch(apiUrl + '/api/expenses/total-expense')
     .then(response => response.json())
     .then(data => setTotalSpent(data))
     .catch(error => console.error('Error fetching expense data:', error));
