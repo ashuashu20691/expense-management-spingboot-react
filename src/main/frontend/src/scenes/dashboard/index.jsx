@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [lastWeekSpent, setLastWeekSpent] = useState([]);
   const [totalSpent, setTotalSpent] = useState([]);
   const [predNextMonthSpent, setPredNextMonthSpent] = useState([]);
+  const [deployVersion, setDeployVersion] = useState([]);
 
   useEffect(() => {
     fetch(apiUrl + '/api/expenses/last-month-expense')
@@ -44,6 +45,11 @@ const Dashboard = () => {
     .then(data => setTotalSpent(data))
     .catch(error => console.error('Error fetching expense data:', error));
 
+    fetch(apiUrl + '/api/expenses/deploy-version')
+    .then(response => response.text())
+    .then(data => setDeployVersion(data))
+    .catch(error => console.error('Error fetching expense data:', error));
+
     }, []);
 
 
@@ -58,6 +64,12 @@ const Dashboard = () => {
       <Helmet>
         <title>Dashboard | Expense Management System</title>
       </Helmet>
+      
+      <Box display="flex" justifyContent="flex-end">
+        <Typography variant="body2" color={colors.grey}>
+          Version: {deployVersion} {/* or {appVersion} if using env variable */}
+        </Typography>
+      </Box>
       {/* <Header title ="Dashboard" subtitle="Welcome to your dashboard" /> */}
       {/* <Box display="flex" justifyContent="flex-end" alignItems="center">
         <Button
