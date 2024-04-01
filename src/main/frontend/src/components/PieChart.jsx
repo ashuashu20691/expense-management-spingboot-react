@@ -80,8 +80,8 @@ const PieChart = () => {
   return (
     <Box textAlign="center">
       <h2>Expenses By Category</h2>
-      <div style={{ width: '900px', height: '900px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <canvas ref={chartRef} width={300} height={300}></canvas>
+      <div style={{ width: '600px', height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <canvas ref={chartRef} width={600} height={600}></canvas>
       </div>
     </Box>
   );

@@ -44,7 +44,7 @@ public class ExpenseController {
 
     @GetMapping("/deploy-version")
     public ResponseEntity<String> getDeployVersion() {
-        return new ResponseEntity<>("0.0.6", HttpStatus.OK);
+        return new ResponseEntity<>("0.0.7", HttpStatus.OK);
     }
 
 
