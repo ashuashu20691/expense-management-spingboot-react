@@ -1,0 +1,49 @@
+# oracle-database-operator.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oracle-database-operator-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle-database-operator-controller-manager
+  namespace: oracle-database-operator-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: oracle-database-operator-controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: oracle-database-operator-controller-manager
+    spec:
+      containers:
+        - command:
+            - /manager
+          image: ghcr.io/oracle/oracle-database-operator:latest
+          name: manager
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+      serviceAccountName: oracle-database-operator
+      terminationGracePeriodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle-database-operator-controller-manager-metrics-service
+  namespace: oracle-database-operator-system
+spec:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 9443
+  selector:
+    control-plane: oracle-database-operator-controller-manager
