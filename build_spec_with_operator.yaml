@@ -46,9 +46,9 @@ outputArtifacts:
 
   # Add Oracle Database Operator and Cert-Manager YAML files
   - name: oracle_database_operator_yaml
-    type: YAML
+    type: BINARY
     location: ${OCI_PRIMARY_SOURCE_DIR}/infra/oracle-database-operator.yaml
 
   - name: cert_manager_yaml
-    type: YAML
+    type: BINARY
     location: ${OCI_PRIMARY_SOURCE_DIR}/infra/cert-manager.yaml
