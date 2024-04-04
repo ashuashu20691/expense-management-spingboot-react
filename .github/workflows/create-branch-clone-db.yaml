@@ -23,10 +23,10 @@ jobs:
           echo $GITHUB_ENV
 
       - name: Make clone-db.sh executable
-        run: chmod +x ./scripts/clone-db.sh
+        run: chmod +x ../../scripts/clone-db.sh
 
       - name: Clone database
-        run: ./scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
+        run: ./../../scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
 
   setup_users:
     needs: clone-db
