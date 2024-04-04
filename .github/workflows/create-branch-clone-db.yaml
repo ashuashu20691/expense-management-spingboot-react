@@ -20,7 +20,7 @@ jobs:
           echo "BRANCH_REF=${{ github.event.ref }}" >> $GITHUB_ENV
 
       - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.3.2
+        uses: oracle-actions/configure-kubectl-oke@v1.3.3  # Update to the latest version
         with:
           cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
