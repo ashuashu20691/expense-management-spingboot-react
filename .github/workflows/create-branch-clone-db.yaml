@@ -1,7 +1,7 @@
 on:
-  create:
+  push:
     branches:
-      - 'feature/**'
+      - 'feature/test-github-action-1'
 
 jobs:
   clone-db:
