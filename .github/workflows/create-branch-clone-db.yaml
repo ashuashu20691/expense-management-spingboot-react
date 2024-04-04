@@ -9,7 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+        with:
+          submodules: 'recursive'
+
       - name: Set up environment variables
         run: |
           echo "OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}" >> $GITHUB_ENV
@@ -20,9 +22,11 @@ jobs:
           echo "BRANCH_REF=${{ github.event.ref }}" >> $GITHUB_ENV
           echo $GITHUB_ENV
 
+      - name: Make clone-db.sh executable
+        run: chmod +x ./scripts/clone-db.sh
+
       - name: Clone database
-        run: |
-          ./scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
+        run: ./scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
 
   setup_users:
     needs: clone-db
