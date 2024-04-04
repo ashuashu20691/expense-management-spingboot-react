@@ -1,12 +1,12 @@
  #!/bin/bash
 
 # Configuration Variables
-SOURCE_DB_OCID="source_db_ocid_here"
-CLONE_DB_NAME="clone_db_name_here"
-CLONE_DB_DISPLAY_NAME="Clone Database Display Name"
-CPU_CORE_COUNT=2 # Adjust as needed
+SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
+CLONE_DB_NAME="test-clone"
+CLONE_DB_DISPLAY_NAME="Test Clone"
+CPU_CORE_COUNT=3 # Adjust as needed
 DATA_STORAGE_SIZE_IN_TB=1 # Adjust as needed
-COMPARTMENT_OCID="compartment_ocid_here"
+COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaavkerdgzd55avjsnomocb2ttxb4j4j7gecxwdfwtstwb2iyowtfba"
 
 # Clone the Autonomous Database
 echo "Cloning the Autonomous Database..."
