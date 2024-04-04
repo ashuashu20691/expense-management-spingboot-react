@@ -1,3 +1,7 @@
+on:
+  push:
+    branches:
+      - 'feature/test-github-action-1'
 jobs:
   clone-db:
     runs-on: ubuntu-latest
@@ -19,7 +23,6 @@ jobs:
       - name: Clone database
         run: |
           ./../../scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
-
 
   setup_users:
     needs: clone-db
