@@ -1,5 +1,5 @@
 #!/bin/bash
-  
+
 # Configuration Variables
 SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
 CLONE_TYPE="FULL"
@@ -32,3 +32,4 @@ if [ -z "$CREATE_RESPONSE" ]; then
 else
     CLONED_DB_OCID=$(echo "$CREATE_RESPONSE" | jq -r '.data.id')
     echo "Successfully created the Autonomous Database from Clone. OCID: $CLONED_DB_OCID"
+fi
