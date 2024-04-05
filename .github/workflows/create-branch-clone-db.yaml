@@ -41,10 +41,15 @@ jobs:
         bYDZl5UVuwIj1vr7NB5qM3/g
         -----END PRIVATE KEY-----
       OCI_CLI_REGION: ap-mumbai-1
+
     steps:
-      - name: Echo DB_NAME secret
-        run: echo "OCI_CLI_USER value is ${{ secrets.DB_NAME }}"
-    
+      - name: Echo OCI_CLI_USER secret
+        run: echo "OCI_CLI_USER value is ${{ OCI_CLI_USER }}"
+
+      - name: Echo OCI version
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        run: oci -version
+
       - name: Retrieve the OCID of a named compartment in tenancy
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-compartment-id
