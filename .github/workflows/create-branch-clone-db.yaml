@@ -46,8 +46,13 @@ jobs:
 
       - name: Echo OCI version
         uses: oracle-actions/run-oci-cli-command@v1.1.1
+        id: oci-version
         with:
           command: '-v'
+
+      - name: Print OCI version
+        run: echo "${{ steps.oci-version.outputs.output }}"
+
 
       - name: Retrieve the OCID of a named compartment in tenancy
         uses: oracle-actions/run-oci-cli-command@v1.1.1
