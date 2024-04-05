@@ -43,8 +43,6 @@ jobs:
       OCI_CLI_REGION: ap-mumbai-1
 
     steps:
-      - name: Echo OCI_CLI_USER secret
-        run: echo "OCI_CLI_USER value is ${{ OCI_CLI_USER }}"
 
       - name: Echo OCI version
         uses: oracle-actions/run-oci-cli-command@v1.1.1
