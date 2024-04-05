@@ -27,7 +27,10 @@ jobs:
 
       - name: Configure OCI CLI
         run: |
-          oci setup config --profile default --user "${OCI_CLI_USER}" --tenancy "${OCI_CLI_TENANCY}" --region "${OCI_CLI_REGION}" --key-file <(echo "${OCI_CLI_KEY_CONTENT}") --fingerprint "${OCI_CLI_FINGERPRINT}"
+          mkdir -p ~/.oci
+          echo -e "[DEFAULT]\nuser=${{ secrets.OCI_CLI_USER }}\nfingerprint=${{ secrets.OCI_CLI_FINGERPRINT }}\nkey_file=${HOME}/.oci/oci_api_key.pem\ntenancy=${{ secrets.OCI_CLI_TENANCY }}\nregion=${{ secrets.OCI_CLI_REGION }}" > ~/.oci/config
+          echo "${{ secrets.OCI_API_KEY_PEM }}" > ${HOME}/.oci/oci_api_key.pem
+          chmod 600 ${HOME}/.oci/oci_api_key.pem
 
       - name: Clone database
         run: |
