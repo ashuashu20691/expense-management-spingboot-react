@@ -3,34 +3,35 @@ on:
     branches:
       - 'feature/test-github-action-1'
 
-jobs:
-  clone-db:
+
+ jobs:
+  my-instances:
     runs-on: ubuntu-latest
+    name: List the display name and shape of the instances in my compartment
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Install OCI CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
-          pip3 install oci-cli
+      - name: Retrieve the OCID of a named compartment in tenancy
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        id: find-compartment-id
+        with:
+          command: 'iam compartment list --compartment-id-in-subtree=true'
+          query: "data[?name=='testing'].id"
 
-      - name: Set up environment variables
-        run: |
-          echo "OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}" >> $GITHUB_ENV
-          echo "OCI_CLI_TENANCY=${{ secrets.OCI_CLI_TENANCY }}" >> $GITHUB_ENV
-          echo "OCI_CLI_FINGERPRINT=${{ secrets.OCI_CLI_FINGERPRINT }}" >> $GITHUB_ENV
-          echo "OCI_CLI_KEY_CONTENT=${{ secrets.OCI_CLI_KEY_CONTENT }}" >> $GITHUB_ENV
-          echo "OCI_CLI_REGION=${{ secrets.OCI_CLI_REGION }}" >> $GITHUB_ENV
-          echo "BRANCH_REF=${{ github.event.ref }}" >> $GITHUB_ENV
+      - name: Retrieve the display name and shape of the instances in my compartment
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        id: find-instances
+        with:
+          command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
+          query: 'data[*].{name: \"display-name\", shape: shape}'
 
-      - name: Configure OCI CLI
+      - name: List the display name and shape of the instances in my compartment
         run: |
-          mkdir -p ~/.oci
-          echo -e "[DEFAULT]\nuser=${{ secrets.OCI_CLI_USER }}\nfingerprint=${{ secrets.OCI_CLI_FINGERPRINT }}\nkey_file=${HOME}/.oci/oci_api_key.pem\ntenancy=${{ secrets.OCI_CLI_TENANCY }}\nregion=${{ secrets.OCI_CLI_REGION }}" > ~/.oci/config
-          echo "${{ secrets.OCI_API_KEY_PEM }}" > ${HOME}/.oci/oci_api_key.pem
-          chmod 600 ${HOME}/.oci/oci_api_key.pem
+          echo ${{ steps.find-instances.outputs.output }} | jq .     
 
       - name: Clone database
         run: |
