@@ -4,7 +4,7 @@ on:
       - 'feature/test-github-action-1'
 
 jobs:
-  my-instances:
+  clone-db:
     runs-on: ubuntu-latest
     name: List the display name and shape of the instances in my compartment
     env:
@@ -36,15 +36,3 @@ jobs:
         run: |
           chmod +x ./scripts/clone-db.sh
           ./scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}
-
-  setup_users:
-    needs: clone-db
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up users
-        run: |
-          # Your commands to set up users go here
-          echo "Setting up users..."
