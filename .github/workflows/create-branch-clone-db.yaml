@@ -44,21 +44,11 @@ jobs:
 
     steps:
     
-      # - name: Install OCI CLI
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y python3 python3-pip
-      #     pip3 install oci-cli
-
-      # - name: Check OCI CLI version
-      #   run: oci -v
-
       - name: Retrieve the OCID of a named compartment in tenancy
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-compartment-id
         with:
           command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
-
 
       - name: Retrieve the display name and shape of the instances in my compartment
         uses: oracle-actions/run-oci-cli-command@v1.1.1
@@ -71,7 +61,7 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .     
 
-       - name: Create Autonomous Database from Clone
+      - name: Create Autonomous Database from Clone
         run: |
           # Configuration Variables
           SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
