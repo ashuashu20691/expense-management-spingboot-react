@@ -43,6 +43,13 @@ jobs:
       OCI_CLI_REGION: ap-mumbai-1
 
     steps:
+    
+      - name: Install OCI CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip3 install oci-cli
+
       - name: Check OCI CLI version
         run: oci -v
 
