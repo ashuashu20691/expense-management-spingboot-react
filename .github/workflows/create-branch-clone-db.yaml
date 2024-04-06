@@ -59,7 +59,15 @@ jobs:
 
       - name: List the display name and shape of the instances in my compartment
         run: |
-          echo ${{ steps.find-instances.outputs.output }} | jq .     
+          echo ${{ steps.find-instances.outputs.output }} | jq .  
+
+      - name: Install ora-operator
+        run: |
+          curl -LO https://github.com/oracle/oci-go-sdk/releases/latest/download/oci-go-sdk.zip
+          unzip oci-go-sdk.zip
+          cd oci-go-sdk
+          make install
+
 
       - name: Create Autonomous Database from Clone
         run: |
