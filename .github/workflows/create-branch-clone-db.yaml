@@ -61,12 +61,9 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
-      - name: Install ora-operator
+      - name: Install Oracle Database Operator
         run: |
-          curl -LO https://github.com/oracle/oci-go-sdk/releases/latest/download/oci-go-sdk.zip
-          unzip oci-go-sdk.zip
-          cd oci-go-sdk
-          make install
+          kubectl apply -f https://raw.githubusercontent.com/oracle/oracle-database-operator/main/oracle-database-operator.yaml
 
 
       - name: Create Autonomous Database from Clone
