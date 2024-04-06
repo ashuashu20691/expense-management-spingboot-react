@@ -61,6 +61,16 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
+      - name: Create Kubernetes Configuration
+        run: |
+          oci ce cluster create-kubeconfig \
+            --cluster-id ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q \
+            --file $HOME/.kube/config \
+            --region ap-mumbai-1 \
+            --token-version 2.0.0 \
+            --kube-endpoint PUBLIC_ENDPOINT
+
+
       - name: Install Oracle Database Operator
         run: |
           kubectl apply -f https://raw.githubusercontent.com/oracle/oracle-database-operator/main/oracle-database-operator.yaml
