@@ -73,5 +73,5 @@ jobs:
 
       - name: Clone database
         run: |
-          chmod +x ./scripts/clone-db.sh
+          chmod +x scripts/clone-db.sh
           ./scripts/clone-db.sh ${{ secrets.DB_NAME }} ${{ secrets.NEW_DB_NAME }} ${{ secrets.NEW_DB_COMPARTMENT }} ${{ secrets.DB_TDE_WALLET }}

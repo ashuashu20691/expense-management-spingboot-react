@@ -3,8 +3,8 @@
 # Configuration Variables
 SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
 CLONE_TYPE="FULL"
-CLONE_DB_DISPLAY_NAME="Test Clone"
-CLONE_DB_NAME="TestClone1"
+CLONE_DB_DISPLAY_NAME="Test Clone CICD"
+CLONE_DB_NAME="TestCloneAutomateCICD"
 COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaavkerdgzd55avjsnomocb2ttxb4j4j7gecxwdfwtstwb2iyowtfba"
 ADMIN_PASSWORD="Igdefault@123"
 COMPUTE_MODEL="ECPU"
