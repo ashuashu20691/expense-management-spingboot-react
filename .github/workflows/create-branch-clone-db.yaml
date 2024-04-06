@@ -43,7 +43,7 @@ jobs:
       OCI_CLI_REGION: ap-mumbai-1
 
     steps:
-
+    
       - name: Install OCI CLI
         run: |
           sudo apt-get update
@@ -57,7 +57,7 @@ jobs:
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-compartment-id
         with:
-          command: 'iam compartment list'
+          command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
 
 
       - name: Retrieve the display name and shape of the instances in my compartment
