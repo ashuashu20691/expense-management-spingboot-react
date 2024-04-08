@@ -43,6 +43,7 @@ jobs:
       OCI_CLI_REGION: ap-mumbai-1
 
     steps:
+      - uses: actions/checkout@v2 # Make sure to include this step  
     
       - name: Retrieve the OCID of a named compartment in tenancy
         uses: oracle-actions/run-oci-cli-command@v1.1.1
