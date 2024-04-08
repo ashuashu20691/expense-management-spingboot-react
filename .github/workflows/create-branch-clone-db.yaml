@@ -74,7 +74,8 @@ jobs:
 
       - name: Install Oracle Database Operator
         run: |
-          kubectl apply -f build_spec_with_operator.yaml
+          kubectl apply -f build_spec_with_operator.yaml --validate=false
+
 
 
       - name: Create Autonomous Database from Clone
