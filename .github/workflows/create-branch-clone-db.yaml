@@ -72,6 +72,12 @@ jobs:
 
       - uses: actions/checkout@v2 # Make sure to include this step
 
+      - name: Set up Kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
       - name: Install Oracle Database Operator
         run: |
           kubectl apply -f build_spec_with_operator.yaml --validate=false
