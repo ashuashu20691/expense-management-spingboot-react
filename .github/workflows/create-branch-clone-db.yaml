@@ -70,13 +70,12 @@ jobs:
             --token-version 2.0.0 \
             --kube-endpoint PUBLIC_ENDPOINT
 
-      - uses: actions/checkout@v2 # Make sure to include this step
+      - name: Configure Kubectl
+        uses: oracle-actions/configure-kubectl-oke@v1.3.2
+        id: test-configure-kubectl-oke-action
+        with:
+          cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
 
-      - name: Set up Kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
 
       - name: Install Oracle Database Operator
         run: |
