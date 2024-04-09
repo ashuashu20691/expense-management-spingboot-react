@@ -10,8 +10,8 @@ jobs:
     name: List the display name and shape of the instances in my compartment
     env:
       OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_TENANCY: ocid1.tenancy.oc1..aaaaaaaafj37mytx22oquorcznlfuh77cd45int7tt7fo27tuejsfqbybzrq
+      OCI_CLI_FINGERPRINT: ed:0d:8e:a6:ca:8a:5c:06:cb:f0:99:3a:78:43:db:8f
       OCI_CLI_KEY_CONTENT: |
         -----BEGIN PRIVATE KEY-----
         MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD1Uu2TWhgyB5ph
