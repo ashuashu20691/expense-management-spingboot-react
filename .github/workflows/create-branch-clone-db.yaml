@@ -5,6 +5,7 @@ on:
 
 jobs:
   clone-db:
+    environment: webhook-secret
     runs-on: ubuntu-latest
     name: List the display name and shape of the instances in my compartment
     env:
