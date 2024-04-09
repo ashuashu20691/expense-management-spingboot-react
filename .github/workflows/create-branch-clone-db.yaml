@@ -47,11 +47,11 @@ jobs:
       - uses: actions/checkout@v2 # Make sure to include this step  
 
       - name: Set up environment variables
-          env :
-            a : ${{ secrets.OCI_CLI_USER }}
-          run : |
-            echo"OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
-            echo $a
+        env :
+          a : ${{ secrets.OCI_CLI_USER }}
+        run : |
+          echo"OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
+          echo $a
 
     
       - name: Retrieve the OCID of a named compartment in tenancy
