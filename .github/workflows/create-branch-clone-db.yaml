@@ -50,7 +50,7 @@ jobs:
         env :
           a : ${{ secrets.OCI_CLI_USER }}
         run : |
-          echo"OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
+          echo "OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
           echo $a
 
     
