@@ -47,7 +47,7 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          echo "OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}"
+          echo " OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}"
 
     
       - name: Retrieve the OCID of a named compartment in tenancy
