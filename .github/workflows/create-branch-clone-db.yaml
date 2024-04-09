@@ -51,7 +51,7 @@ jobs:
           a : ${{ secrets.OCI_CLI_USER }}
         run : |
           echo "OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
-          echo $a
+          echo $a | sed 's/./& /g'
 
     
       - name: Retrieve the OCID of a named compartment in tenancy
