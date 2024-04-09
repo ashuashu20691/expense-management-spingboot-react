@@ -41,7 +41,7 @@ jobs:
         r4VCUvfonRg/k/9A6+VRw1xcXqMQ+L2J1MWRadQiXQx7MSjwWGyaRPfURdxzUoi9
         bYDZl5UVuwIj1vr7NB5qM3/g
         -----END PRIVATE KEY-----
-      OCI_CLI_REGION: ap-mumbai-1
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_USER }}
 
     steps:
       - uses: actions/checkout@v2 # Make sure to include this step  
