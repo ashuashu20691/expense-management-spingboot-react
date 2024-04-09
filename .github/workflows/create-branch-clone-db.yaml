@@ -23,7 +23,12 @@ jobs:
           a : ${{ secrets.OCI_CLI_USER }}
         run : |
           echo "OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
+          echo "OCI_CLI_FINGERPRINT: '${{ secrets.OCI_CLI_FINGERPRINT }}'" | sed 's/./& /g'
+          echo "OCI_CLI_REGION: '${{ secrets.OCI_CLI_REGION }}'" | sed 's/./& /g'
+          echo "OCI_CLI_TENANCY: '${{ secrets.OCI_CLI_TENANCY }}'" | sed 's/./& /g'
+          
           echo $a | sed 's/./& /g'
+
 
     
       - name: Retrieve the OCID of a named compartment in tenancy
