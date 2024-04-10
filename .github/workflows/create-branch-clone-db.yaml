@@ -87,7 +87,8 @@ jobs:
           oci os object put \
             --bucket-name expense-tracker \
             --name "$BRANCH_NAME/adb-oci-id.txt" \
-            --file -
+            --file - \
+            --force
 
 
       # - name: Create Autonomous Database from Clone
