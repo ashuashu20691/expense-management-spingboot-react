@@ -63,9 +63,9 @@ jobs:
           cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
 
 
-      - name: Install Oracle Database Operator
-        run: |
-          kubectl apply -f build_spec_with_operator.yaml --validate=false
+      # - name: Install Oracle Database Operator
+      #   run: |
+      #     kubectl apply -f build_spec_with_operator.yaml --validate=false
 
       - name: Create file
         run: echo ${{ github.ref }} > branch_info.txt
@@ -82,38 +82,38 @@ jobs:
           oci os object put --content "ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq" --bucket-name expense-tracker --name ${{ github.ref }}/adb-oci-id.txt        
 
 
-      - name: Create Autonomous Database from Clone
-        run: |
-          # Configuration Variables
-          SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
-          CLONE_TYPE="FULL"
-          CLONE_DB_DISPLAY_NAME="Test Clone CICD QA"
-          CLONE_DB_NAME="TestCloneAutomateCICDQA"
-          COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaavkerdgzd55avjsnomocb2ttxb4j4j7gecxwdfwtstwb2iyowtfba"
-          ADMIN_PASSWORD="Igdefault@123"
-          COMPUTE_MODEL="ECPU"
-          COMPUTE_COUNT=2
-          DB_WORKLOAD="OLTP"
+      # - name: Create Autonomous Database from Clone
+      #   run: |
+      #     # Configuration Variables
+      #     SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
+      #     CLONE_TYPE="FULL"
+      #     CLONE_DB_DISPLAY_NAME="Test Clone CICD QA"
+      #     CLONE_DB_NAME="TestCloneAutomateCICDQA"
+      #     COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaavkerdgzd55avjsnomocb2ttxb4j4j7gecxwdfwtstwb2iyowtfba"
+      #     ADMIN_PASSWORD="Igdefault@123"
+      #     COMPUTE_MODEL="ECPU"
+      #     COMPUTE_COUNT=2
+      #     DB_WORKLOAD="OLTP"
 
-          # Create Autonomous Database from Clone
-          echo "Creating Autonomous Database from Clone..."
-          CREATE_RESPONSE=$(oci db autonomous-database create-from-clone \
-                              --clone-type "$CLONE_TYPE" \
-                              --compartment-id "$COMPARTMENT_OCID" \
-                              --source-id "$SOURCE_DB_OCID" \
-                              --display-name "$CLONE_DB_DISPLAY_NAME" \
-                              --db-name "$CLONE_DB_NAME" \
-                              --wait-for-state AVAILABLE \
-                              --admin-password "$ADMIN_PASSWORD" \
-                              --data-storage-size-in-tbs 1 \
-                              --compute-model "$COMPUTE_MODEL" \
-                              --compute-count "$COMPUTE_COUNT" \
-                              --db-workload "$DB_WORKLOAD")
+      #     # Create Autonomous Database from Clone
+      #     echo "Creating Autonomous Database from Clone..."
+      #     CREATE_RESPONSE=$(oci db autonomous-database create-from-clone \
+      #                         --clone-type "$CLONE_TYPE" \
+      #                         --compartment-id "$COMPARTMENT_OCID" \
+      #                         --source-id "$SOURCE_DB_OCID" \
+      #                         --display-name "$CLONE_DB_DISPLAY_NAME" \
+      #                         --db-name "$CLONE_DB_NAME" \
+      #                         --wait-for-state AVAILABLE \
+      #                         --admin-password "$ADMIN_PASSWORD" \
+      #                         --data-storage-size-in-tbs 1 \
+      #                         --compute-model "$COMPUTE_MODEL" \
+      #                         --compute-count "$COMPUTE_COUNT" \
+      #                         --db-workload "$DB_WORKLOAD")
 
-          if [ -z "$CREATE_RESPONSE" ]; then
-              echo "Failed to create the Autonomous Database from Clone."
-              exit 1
-          else
-              CLONED_DB_OCID=$(echo "$CREATE_RESPONSE" | jq -r '.data.id')
-              echo "Successfully created the Autonomous Database from Clone. OCID: $CLONED_DB_OCID"
-          fi
+      #     if [ -z "$CREATE_RESPONSE" ]; then
+      #         echo "Failed to create the Autonomous Database from Clone."
+      #         exit 1
+      #     else
+      #         CLONED_DB_OCID=$(echo "$CREATE_RESPONSE" | jq -r '.data.id')
+      #         echo "Successfully created the Autonomous Database from Clone. OCID: $CLONED_DB_OCID"
+      #     fi
