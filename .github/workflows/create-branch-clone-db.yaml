@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-          
+
       - name: Set up environment variables
         env :
           a : ${{ secrets.OCI_CLI_USER }}
@@ -71,7 +71,7 @@ jobs:
       #     kubectl apply -f build_spec_with_operator.yaml --validate=false
 
       - name: Create file
-        run: echo ${{ github.ref }} > branch_info.txt
+        run: echo "${{ github.ref }}" | cut -d '/' -f 3 > branch_info.txt
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -80,11 +80,14 @@ jobs:
           commit_user_name: "GitHub Actions"
           commit_user_email: "actions@github.com"
           
-
           
-      - name: Push file to OCI Object Storage
+      - name: Upload object to OCI Object Storage
         run: |
-          oci os object put --content "ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq" --bucket-name expense-tracker --name ${{ github.ref }}/adb-oci-id.txt        
+          echo "ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq" | \
+          oci os object put \
+            --bucket-name expense-tracker \
+            --name "$BRANCH_NAME/adb-oci-id.txt" \
+            --file -
 
 
       # - name: Create Autonomous Database from Clone
