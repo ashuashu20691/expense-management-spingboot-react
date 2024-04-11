@@ -125,3 +125,4 @@ jobs:
                 --file - \
                 --force
               echo "Upload successful."
+          fi # This closes the if statement
