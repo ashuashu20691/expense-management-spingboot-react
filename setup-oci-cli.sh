@@ -32,6 +32,7 @@ r4VCUvfonRg/k/9A6+VRw1xcXqMQ+L2J1MWRadQiXQx7MSjwWGyaRPfURdxzUoi9
 bYDZl5UVuwIj1vr7NB5qM3/g
 -----END PRIVATE KEY-----" > /root/.oci/oci_api_key.pem
 
+
 # Create the OCI CLI config file dynamically using environment variables
 cat > /root/.oci/config << EOF
 [DEFAULT]
@@ -45,9 +46,38 @@ EOF
 # Expect the OCI API private key to be passed as a Docker secret or bind-mounted file
 # Ensure the oci_api_key.pem is placed correctly or mounted at runtime
 
+
+chmod 600 /root/.oci/config /root/.oci/oci_api_key.pem
+
 echo oci -v
 
-echo oci iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"
+# Execute the command to get the content of the file from OCI Object Storage
+ADB_ID=$(oci os object get --bucket-name expense-tracker --name feature-branch-1/adb-oci-id.txt --file -)
+
+# Check if the command was successful and the ADB_ID is not empty
+if [ -n "$ADB_ID" ]; then
+    echo "ADB ID retrieved successfully: $ADB_ID"
+else
+    echo "Failed to retrieve ADB ID"
+fi
+
+
+WALLET_PASSWORD="Igdefault123"
+
+echo $ADB_ID
+
+# Generate wallet for Autonomous Database
+oci db autonomous-database generate-wallet --autonomous-database-id ${ADB_ID} --file /tmp/wallet.zip --password "${WALLET_PASSWORD}"
+
+# Unzip the wallet file
+
+unzip -P "${WALLET_PASSWORD}" -o /tmp/wallet.zip -d /wallet
+
+echo /wallet/tnsnames.ora
+
+# Remove the downloaded wallet zip file
+rm /tmp/wallet.zip
+
 
 # Execute OCI CLI command if provided
 if [ "$#" -eq 0 ]; then
