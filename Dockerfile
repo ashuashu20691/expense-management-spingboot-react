@@ -49,6 +49,8 @@ EXPOSE 8080
 
 COPY setup-oci-cli.sh setup-oci-cli.sh
 
+COPY branch_info.txt branch_info.txt
+
 RUN chmod +x setup-oci-cli.sh
 
 RUN sh setup-oci-cli.sh
