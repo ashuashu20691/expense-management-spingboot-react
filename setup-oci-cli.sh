@@ -90,3 +90,5 @@ else
     # Execute the passed command
     exec "$@"
 fi
+
+export TNS_SERVICE_NAME=testcloneautomatecicdqaa
