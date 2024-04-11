@@ -51,8 +51,11 @@ chmod 600 /root/.oci/config /root/.oci/oci_api_key.pem
 
 echo oci -v
 
+BRANCH_NAME=$(cat branch_info.txt)
+
+
 # Execute the command to get the content of the file from OCI Object Storage
-ADB_ID=$(oci os object get --bucket-name expense-tracker --name feature-branch-1/adb-oci-id.txt --file -)
+ADB_ID=$(oci os object get --bucket-name expense-tracker --name "$BRANCH_NAME/cloned-adb-oci-id.txt" --file -)
 
 # Check if the command was successful and the ADB_ID is not empty
 if [ -n "$ADB_ID" ]; then
