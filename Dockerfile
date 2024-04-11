@@ -56,4 +56,4 @@ RUN chmod +x setup-oci-cli.sh
 RUN sh setup-oci-cli.sh
 
 # Specify the command to run your application
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Dspring.datasource.url=jdbc:oracle:thin:@${TNS_SERVICE_NAME}_tp?TNS_ADMIN=/wallet", "-jar", "app.jar"]
