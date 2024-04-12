@@ -14,6 +14,7 @@ jobs:
       OCI_CLI_FINGERPRINT: ${{secrets.OCI_CLI_FINGERPRINT}}
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+      OCI_CLI_COMPARTMENT_ID: ${{ secrets.OCI_CLI_COMPARTMENT_ID }}
 
     steps:
       - uses: actions/checkout@v2 # Make sure to include this step  
@@ -50,6 +51,20 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
+      # Create VCN
+      - name: Create VCN
+        id: create-vcn
+        run: |
+          # Use OCI CLI to create VCN
+          # Replace placeholders with actual values
+          vcn_id=$(oci network vcn create \
+            --cidr-block 10.0.0.0/16 \
+            --compartment-id $OCI_CLI_COMPARTMENT_ID \
+            --display-name ${{ github.ref }}-oke-vcn \
+            --query "data.id" \
+            --raw-output)
+          echo "::set-output name=vcn-id::$vcn_id"
+
       # Create OKE Cluster
       - name: Create OKE Cluster
         id: create-oke-cluster
@@ -57,8 +72,9 @@ jobs:
           oci ce cluster create \
             --name ${{ github.ref }}-oke-cluster \
             --kubernetes-version "v1.21.3" \
-            --compartment-id $OCI_CLI_TENANCY \
-            --wait-for-state SUCCEEDED
+            --compartment-id $OCI_CLI_COMPARTMENT_ID \
+            --wait-for-state SUCCEEDED \
+            --vcn-id ${{ steps.create-vcn.outputs.vcn-id }}
 
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
