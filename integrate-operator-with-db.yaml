@@ -4,7 +4,7 @@ metadata:
   name: clouddb-bind
 spec:
   details:
-    autonomousDatabaseOCID: <existing_ADB_OCID>
+    autonomousDatabaseOCID: ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqawq6nbd3k52n5x7sa4zw322y2qrs5j2q4io3d22ekuazq
     wallet:
       name: clouddb-wallet
       password:
@@ -20,7 +20,7 @@ metadata:
   name: clouddb-wallet-password
 type: Opaque
 data:
-  clouddb-wallet-password: <base64_encoded_password_here>
+  clouddb-wallet-password: SWdkZWZhdWx0QDEyMw==
 ---
 apiVersion: v1
 kind: Secret
@@ -28,7 +28,7 @@ metadata:
   name: oci-privatekey
 type: Opaque
 data:
-  privatekey: <base64_encoded_private_key_here>
+  privatekey: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUJtakNDQWZLZ0F3SUJBZ0lKQU5yUzdhT2Q2U0w3aEhEekk3QzFLcHg2RU5EWTVlTWk1RFFtVUVBd0hoRUFBTUNDQVdZQU1BZ0xESkRZekVUTUJFR0ExVUVCd3dLUVhCd2JHVjViM1p2YzJsdmJqcG9PbU1nVTFOSk1UVXlNak0zTURJeU1EVXlNREJhRncweU1EQXhOVEV6TnpJeE56QTFNelEwTXpFNE1EZ3hPREE0V2hjTk16QTRNRE14TXpNME1nL3JOWHBRaGtjSHRYZWxRaW1kQmU5QWhJQ2RfWUlvcFdLbllpc3RRUFpmN0tqelpFRGp4Nk9MeXVzZjhiMlVuUDExbngyMk44cXpaUmNrd0hCZUZkMENhdUhZbGtWREptV0g0R2FYNkNhdVlBU2NIQzJvOEdlOWxsYUNnTVRJek1UQXpOQzV5VkcxbC9CRzBCTnRRNXRTNGtqTHlkWHkKdU9DdWw1ZGdrSUxkSzJxQzhKdFZUeG9XUnBTREw1WFZmdzZpTzVuVE5NS3E0UEVhZ1h6b3l5aE5Rekx2RjkyT3JsK0lVOWwyRlRUSlNkcEtDSmpCMXBPWXdNcEdHaWxra3NLTHl5c29PQXU1QVMvRmltckxYR1F2TVlqQXlqY0FsczJkZlh2d0RVRU1sc1daNSsyNjhlbWFCOHk4Sm1hZkp1OUluZDJpYVdXdVUyV0ppN1owNUpDakxBeHVWb29RZ0tId1pKX0ZXSUlESkJNajlXaTVLMzEwM01tU3VrZlY5UG5NYVRYWldBKzJrQ2dpZEEzT05OMTZ6VnRkY0pRTi9vWDJ5M0plWnU3TzJWZ2VhVXh1QlY0SmwwT3Znd0ZJT3g0VDdCNHc4TE83cnAwM3RuamJ4UEJnZWl3Wj9WMV5McXJ2ZVJmTlNycVFCS3V6Qll6cnE= 
 ---
 apiVersion: v1
 kind: ConfigMap
