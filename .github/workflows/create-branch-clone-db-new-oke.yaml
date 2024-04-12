@@ -1,5 +1,5 @@
 on:
-  create:
+  push:
     branches:
       - 'feature/test-github-action-1'
 
@@ -50,14 +50,22 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
+      # Create OKE Cluster
+      - name: Create OKE Cluster
+        id: create-oke-cluster
+        run: |
+          oci ce cluster create \
+            --name ${{ github.ref }}-oke-cluster \
+            --kubernetes-version "v1.21.3" \
+            --compartment-id $OCI_CLI_TENANCY \
+            --wait-for-state ACTIVE
+
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
         id: test-configure-kubectl-oke-action
         with:
-          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+          cluster: ${{ steps.create-oke-cluster.outputs.oke-cluster-ocid }}
 
-      - name: Run Kubectl
-        run: kubectl get nodes -A
 
       - name: Install Oracle Database Cert Manager
         run: |
