@@ -1,23 +1,23 @@
 # Use the official Maven image as the base image
 FROM maven:3.8.4-openjdk-17-slim AS build
 
-# Set the working directory in the container
+# # Set the working directory in the container
 WORKDIR /app
 
-# Copy the pom.xml file to the container
-COPY pom.xml .
+# # Copy the pom.xml file to the container
+ COPY pom.xml .
 
-# Download the dependencies and create a layer for them
-RUN mvn dependency:go-offline -B
+# # Download the dependencies and create a layer for them
+ RUN mvn dependency:go-offline -B
 
 # Copy the project source code to the container
 
 COPY src src
 
-# Build the application
+# # Build the application
 RUN mvn package -DskipTests
 
-# Use the official OpenJDK image as the base image for runtime
+# # Use the official OpenJDK image as the base image for runtime
 FROM openjdk:17-jdk-slim AS runtime
 
 # Install OCI CLI. This requires some additional packages to be installed first.
@@ -41,8 +41,8 @@ COPY --from=build /app/target/spring-boot-oracle-0.0.1-SNAPSHOT.jar app.jar
 # COPY config /root/.oci/config
 # COPY oci_api_key.pem /root/.oci/oci_api_key.pem
 
-# Alternatively, you can configure OCI CLI dynamically at runtime 
-# by setting environment variables in your container orchestration system (e.g., Kubernetes, Docker Compose)
+CMD sh setup-oci-cli.sh
+
 
 # Expose the port on which the application will run
 EXPOSE 8080
@@ -51,8 +51,9 @@ COPY setup-oci-cli.sh setup-oci-cli.sh
 
 COPY branch_info.txt branch_info.txt
 
-RUN chmod +x setup-oci-cli.sh
+RUN chmod +x setup-oci-cli.sh entrypoint.sh
 
 RUN sh setup-oci-cli.sh
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Specify the command to run your application
+ENTRYPOINT ["entrypoint.sh"]
