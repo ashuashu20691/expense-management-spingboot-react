@@ -53,7 +53,7 @@ jobs:
       # - name: Create Kubernetes Configuration
       #   run: |
       #     oci ce cluster create-kubeconfig \
-      #       --cluster-id ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q \
+      #       --cluster-id ${{ secrets.OKE_CLUSTER_OCID }} \
       #       --file $HOME/.kube/config \
       #       --region ap-mumbai-1 \
       #       --token-version 2.0.0 \
@@ -63,7 +63,7 @@ jobs:
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
         id: test-configure-kubectl-oke-action
         with:
-          cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
+          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
       - name: Run Kubectl
         run: kubectl get nodes -A
