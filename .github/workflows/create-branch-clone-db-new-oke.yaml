@@ -65,6 +65,20 @@ jobs:
       #                     --vcn-id $OCI_CLI_VCN_ID)
       #     echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
 
+      - name: List Availability Domains
+        id: list-availability-domains
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        with:
+          command: 'iam availability-domain list --region $OCI_CLI_REGION'
+          
+      - name: Extract Availability Domain
+        id: extract-availability-domain
+        run: |
+          # Extracting the first availability domain from the output
+          AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
+          echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
+
+
       - name: Create Node Pool
         id: create-node-pool
         run: |
@@ -74,8 +88,11 @@ jobs:
             --cluster-id $CLUSTER_OCID \
             --node-image-name "Oracle-Linux-8.4" \
             --node-shape "VM.Standard2.1" \
-            --compartment-id $OCI_CLI_COMPARTMENT_ID
+            --compartment-id $OCI_CLI_COMPARTMENT_ID \
+            --quantity-per-subnet 1 \
+            --node-config-details '{"size":"1","placementConfigs":[{"availabilityDomain":"availability_domain"}]}' \
             --wait-for-state SUCCEEDED
+
 
 
       - name: Configure Kubectl
