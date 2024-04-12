@@ -32,37 +32,13 @@ jobs:
           echo "OCI_CLI_REGION: '${{ secrets.OCI_CLI_REGION }}'" | sed 's/./& /g'
           echo "OCI_CLI_TENANCY: '${{ secrets.OCI_CLI_TENANCY }}'" | sed 's/./& /g'
           echo $a | sed 's/./& /g'
-
-
     
-      - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        id: find-compartment-id
-        with:
-          command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
-
-      - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        id: find-instances
-        with:
-          command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
-          query: 'data[*].{name: \"display-name\", shape: shape}'
-
-      - name: List the display name and shape of the instances in my compartment
-        run: |
-          echo ${{ steps.find-instances.outputs.output }} | jq .  
-
-
       # Create OKE Cluster
       - name: Create OKE Cluster
         id: create-oke-cluster
         run: |
           # Extract the branch name from github.ref
-          BRANCH_NAME=$(basename ${{ github.ref }})
-
-          # Generate a random string for the cluster name
-          CLUSTER_NAME="${BRANCH_NAME}-oke-cluster"
-
+          CLUSTER_NAME=$(basename ${{ github.ref }})
           # Create the OKE cluster with the random name
           oci ce cluster create \
             --name $CLUSTER_NAME \
@@ -78,6 +54,12 @@ jobs:
         with:
           cluster: ${{ steps.create-oke-cluster.outputs.oke-cluster-ocid }}
 
+      # Create OKE Cluster Environment
+      - name: Create OKE Cluster Environment
+        run: |
+          oci devops deploy-environment create-oke-cluster-environment \
+            --cluster-id ${{ steps.create-oke-cluster.outputs.cluster-id }} \
+            --project-id ${{ secrets.OCI_PROJECT_ID }}
 
       - name: Install Oracle Database Cert Manager
         run: |
@@ -152,3 +134,6 @@ jobs:
       - name: Binding Newly Created ADB with Oracle Operators
         run: |
           kubectl apply -f integrate-operator-with-db.yaml
+
+
+
