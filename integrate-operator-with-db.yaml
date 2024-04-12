@@ -1,0 +1,42 @@
+apiVersion: database.oracle.com/v1alpha1
+kind: AutonomousDatabase
+metadata:
+  name: clouddb-bind
+spec:
+  details:
+    autonomousDatabaseOCID: <existing_ADB_OCID>
+    wallet:
+      name: clouddb-wallet
+      password:
+        k8sSecret:
+          name: clouddb-wallet-password
+  ociConfig:
+    configMapName: oci-cred
+    secretName: oci-privatekey
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: clouddb-wallet-password
+type: Opaque
+data:
+  clouddb-wallet-password: <base64_encoded_password_here>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oci-privatekey
+type: Opaque
+data:
+  privatekey: <base64_encoded_private_key_here>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oci-cred
+  namespace: oracle-database-operator-system
+data:
+  tenancy: ocid1.tenancy.oc1..aaaaaaaafj37mytx22oquorcznlfuh77cd45int7tt7fo27tuejsfqbybzrq
+  user: ocid1.user.oc1..aaaaaaaajxmzb5c53vppyqqbsfidw6ltgkpitiswxshc37soo3ebw3zxl4xa
+  fingerprint: ed:0d:8e:a6:ca:8a:5c:06:cb:f0:99:3a:78:43:db:8f
+  region: ap-mumbai-1

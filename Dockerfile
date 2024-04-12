@@ -34,15 +34,6 @@ WORKDIR /app
 # Copy the JAR file from the build image to the runtime image
 COPY --from=build /app/target/spring-boot-oracle-0.0.1-SNAPSHOT.jar app.jar
 
-# Copy the wallet folder from the host to the container's root directory
-#COPY wallet /wallet
-
-# Optionally, add your OCI CLI configuration files
-# COPY config /root/.oci/config
-# COPY oci_api_key.pem /root/.oci/oci_api_key.pem
-
-CMD sh setup-oci-cli.sh
-
 
 # Expose the port on which the application will run
 EXPOSE 8080
