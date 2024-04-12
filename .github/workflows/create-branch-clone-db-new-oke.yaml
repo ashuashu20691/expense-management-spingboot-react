@@ -69,7 +69,7 @@ jobs:
         id: list-availability-domains
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         with:
-          command: 'iam availability-domain list --region $OCI_CLI_REGION'
+          command: 'oci iam availability-domain list --region $OCI_CLI_REGION'
           
       - name: Extract Availability Domain
         id: extract-availability-domain
@@ -82,6 +82,7 @@ jobs:
       - name: Create Node Pool
         id: create-node-pool
         run: |
+          AVAILABILITY_DOMAIN="${{ steps.extract-availability-domain.outputs.availability-domain }}"
           CLUSTER_OCID=ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaaafz6vmwi7dgj7ni4323l5mdie57vdspanbx7dp7l5cqwpblhxyga
           oci ce node-pool create \
             --name node-pool-1 \
@@ -90,7 +91,7 @@ jobs:
             --node-shape "VM.Standard2.1" \
             --compartment-id $OCI_CLI_COMPARTMENT_ID \
             --quantity-per-subnet 1 \
-            --node-config-details '{"size":"1","placementConfigs":[{"availabilityDomain":"availability_domain"}]}' \
+            --node-config-details '{"size":"1","placementConfigs":[{"availabilityDomain":$AVAILABILITY_DOMAIN}]}' \
             --wait-for-state SUCCEEDED
 
 
