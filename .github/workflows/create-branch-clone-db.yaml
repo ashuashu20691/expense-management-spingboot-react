@@ -33,22 +33,22 @@ jobs:
 
 
     
-      - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        id: find-compartment-id
-        with:
-          command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
+      # - name: Retrieve the OCID of a named compartment in tenancy
+      #   uses: oracle-actions/run-oci-cli-command@v1.1.1
+      #   id: find-compartment-id
+      #   with:
+      #     command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
 
-      - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        id: find-instances
-        with:
-          command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
-          query: 'data[*].{name: \"display-name\", shape: shape}'
+      # - name: Retrieve the display name and shape of the instances in my compartment
+      #   uses: oracle-actions/run-oci-cli-command@v1.1.1
+      #   id: find-instances
+      #   with:
+      #     command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
+      #     query: 'data[*].{name: \"display-name\", shape: shape}'
 
-      - name: List the display name and shape of the instances in my compartment
-        run: |
-          echo ${{ steps.find-instances.outputs.output }} | jq .  
+      # - name: List the display name and shape of the instances in my compartment
+      #   run: |
+      #     echo ${{ steps.find-instances.outputs.output }} | jq .  
 
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
@@ -56,26 +56,26 @@ jobs:
         with:
           cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
-      - name: Run Kubectl
-        run: kubectl get nodes -A
+      # - name: Run Kubectl
+      #   run: kubectl get nodes -A
 
-      - name: Install Oracle Database Cert Manager
-        run: |
-          kubectl apply -f cert-manager.yaml
+      # - name: Install Oracle Database Cert Manager
+      #   run: |
+      #     kubectl apply -f cert-manager.yaml
 
-      - name: Install Oracle Database Operator
-        run: |
-          kubectl apply -f oracle-database-operator.yaml
+      # - name: Install Oracle Database Operator
+      #   run: |
+      #     kubectl apply -f oracle-database-operator.yaml
 
-      - name: Create file
-        run: echo "${{ github.ref }}" > branch_info.txt
+      # - name: Create file
+      #   run: echo "${{ github.ref }}" > branch_info.txt
 
-      - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "Update branch_info.txt"
-          commit_user_name: "GitHub Actions"
-          commit_user_email: "actions@github.com"
+      # - name: Commit and push changes
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     commit_message: "Update branch_info.txt"
+      #     commit_user_name: "GitHub Actions"
+      #     commit_user_email: "actions@github.com"
           
           
       # - name: Create Autonomous Database from Clone and Upload OCID
@@ -126,7 +126,7 @@ jobs:
 
       - name: Update YAML file
         run: |
-          CLONED_DB_OCID=ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqawq6nbd3k52n5x7sa4zw322y2qrs5j2q4io3d22ekuazq
+          # CLONED_DB_OCID=ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqawq6nbd3k52n5x7sa4zw322y2qrs5j2q4io3d22ekuazq
           # sed -i "s|<existing_ADB_OCID>|$CLONED_DB_OCID|g" integrate-operator-with-db.yaml
           sed -i "s|<base64_encoded_password_here>|Igdefault@123|g" integrate-operator-with-db.yaml
           sed -i "s|<base64_encoded_private_key_here>|$OCI_CLI_KEY_CONTENT|g" integrate-operator-with-db.yaml
