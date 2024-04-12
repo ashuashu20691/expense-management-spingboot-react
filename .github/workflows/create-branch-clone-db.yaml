@@ -127,7 +127,7 @@ jobs:
       - name: Update YAML file
         run: |
           CLONED_DB_OCID=ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqawq6nbd3k52n5x7sa4zw322y2qrs5j2q4io3d22ekuazq
-          sed -i "s|<existing_ADB_OCID>|$CLONED_DB_OCID|g" integrate-operator-with-db.yaml
+          # sed -i "s|<existing_ADB_OCID>|$CLONED_DB_OCID|g" integrate-operator-with-db.yaml
           sed -i "s|<base64_encoded_password_here>|Igdefault@123|g" integrate-operator-with-db.yaml
           sed -i "s|<base64_encoded_private_key_here>|$OCI_CLI_KEY_CONTENT|g" integrate-operator-with-db.yaml
 
