@@ -131,5 +131,6 @@ jobs:
           sed -i "s|<base64_encoded_password_here>|Igdefault@123|g" integrate-operator-with-db.yaml
           sed -i "s|<base64_encoded_private_key_here>|$OCI_CLI_KEY_CONTENT|g" integrate-operator-with-db.yaml
 
+
       - name: Display updated YAML file
         run: cat your_yaml_file.yaml
