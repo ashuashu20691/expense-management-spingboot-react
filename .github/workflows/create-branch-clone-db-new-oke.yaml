@@ -91,6 +91,7 @@ jobs:
             --node-shape "VM.Standard2.1" \
             --compartment-id $OCI_CLI_COMPARTMENT_ID \
             --quantity-per-subnet 1 \
+            --node-config '{"size":"1","placementConfigs":[{"availabilityDomain":$AVAILABILITY_DOMAIN}]}' \
             --wait-for-state SUCCEEDED
 
 
