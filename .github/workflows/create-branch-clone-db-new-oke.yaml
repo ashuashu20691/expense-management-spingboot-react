@@ -49,7 +49,7 @@ jobs:
       - name: List the display name and shape of the instances in my compartment
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
-              
+
       # Create OKE Cluster
       - name: Create OKE Cluster
         id: create-oke-cluster
@@ -59,7 +59,7 @@ jobs:
           # Create the OKE cluster with the random name
           oci ce cluster create \
             --name $CLUSTER_NAME \
-            --kubernetes-version "v1.21.3" \
+            --kubernetes-version "v1.29.1" \
             --compartment-id $OCI_CLI_COMPARTMENT_ID \
             --wait-for-state SUCCEEDED \
             --vcn-id $OCI_CLI_VCN_ID
