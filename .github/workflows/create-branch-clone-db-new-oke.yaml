@@ -82,6 +82,7 @@ jobs:
         id: create-node-pool
         run: |
           AVAILABILITY_DOMAIN="${{ steps.extract-availability-domain.outputs.availability-domain }}"
+          echo $AVAILABILITY_DOMAIN
           CLUSTER_OCID=ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaaafz6vmwi7dgj7ni4323l5mdie57vdspanbx7dp7l5cqwpblhxyga
           oci ce node-pool create \
             --name node-pool-1 \
