@@ -59,14 +59,15 @@ jobs:
             --token-version 2.0.0 \
             --kube-endpoint PUBLIC_ENDPOINT
 
-      - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.3.2
-        id: test-configure-kubectl-oke-action
-        with:
-          cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
+      # - name: Configure Kubectl
+      #   uses: oracle-actions/configure-kubectl-oke@v1.3.2
+      #   id: test-configure-kubectl-oke-action
+      #   with:
+      #     cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
 
-      # - name: Check Kubernetes API connectivity
-      #   run: curl -v https://144.24.100.166:6443
+      - name: Check Kubernetes API connectivity
+        run: kubectl get nodes -v=10
+
 
 
       - name: Install Oracle Database Operator
