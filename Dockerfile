@@ -49,6 +49,8 @@ EXPOSE 8080
 
 COPY setup-oci-cli.sh setup-oci-cli.sh
 
+COPY entrypoint.sh entrypoint.sh
+
 COPY branch_info.txt branch_info.txt
 
 RUN chmod +x setup-oci-cli.sh entrypoint.sh
@@ -56,4 +58,4 @@ RUN chmod +x setup-oci-cli.sh entrypoint.sh
 RUN sh setup-oci-cli.sh
 
 # Specify the command to run your application
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
