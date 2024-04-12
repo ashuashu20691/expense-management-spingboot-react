@@ -58,7 +58,7 @@ jobs:
             --name ${{ github.ref }}-oke-cluster \
             --kubernetes-version "v1.21.3" \
             --compartment-id $OCI_CLI_TENANCY \
-            --wait-for-state ACTIVE
+            --wait-for-state SUCCEEDED
 
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
