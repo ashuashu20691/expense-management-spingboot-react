@@ -35,6 +35,7 @@ jobs:
     
       # Create OKE Cluster
       - name: Create OKE Cluster
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: create-oke-cluster
         run: |
           # Extract the branch name from github.ref
