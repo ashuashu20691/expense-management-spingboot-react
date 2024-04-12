@@ -80,15 +80,3 @@ echo /wallet/tnsnames.ora
 
 # Remove the downloaded wallet zip file
 rm /tmp/wallet.zip
-
-
-# Execute OCI CLI command if provided
-if [ "$#" -eq 0 ]; then
-    # Default to bash if no command is specified
-    exec /bin/bash
-else
-    # Execute the passed command
-    exec "$@"
-fi
-
-export TNS_SERVICE_NAME=testcloneautomatecicdqaa
