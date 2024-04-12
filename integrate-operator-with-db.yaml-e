@@ -4,7 +4,7 @@ metadata:
   name: clouddb-bind
 spec:
   details:
-    autonomousDatabaseOCID: <existing_ADB_OCID>
+    autonomousDatabaseOCID: ${CLONED_DB_OCID}
     wallet:
       name: clouddb-wallet
       password:
