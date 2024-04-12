@@ -65,10 +65,14 @@ jobs:
         with:
           cluster: ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaa7dentcobq4z5xpqkn7kdpcg6obon4icgghgwe2fgtckgxg5oew6q
 
+      - name: Check Kubernetes API connectivity
+        run: curl -v https://144.24.100.166:6443
 
-      # - name: Install Oracle Database Operator
-      #   run: |
-      #     kubectl apply -f build_spec_with_operator.yaml --validate=false
+
+      - name: Install Oracle Database Operator
+        run: |
+          kubectl apply -f build_spec_with_operator.yaml --validate=false
+          timeout-minutes: 5 # Increase timeout if necessary
 
       - name: Create file
         run: echo "${{ github.ref }}" > branch_info.txt
