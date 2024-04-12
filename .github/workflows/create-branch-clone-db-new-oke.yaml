@@ -67,9 +67,8 @@ jobs:
 
       - name: List Availability Domains
         id: list-availability-domains
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        with:
-          command: 'oci iam availability-domain list --region $OCI_CLI_REGION'
+        run: |
+          oci iam availability-domain list --region $OCI_CLI_REGION
           
       - name: Extract Availability Domain
         id: extract-availability-domain
