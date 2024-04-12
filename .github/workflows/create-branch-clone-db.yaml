@@ -50,15 +50,6 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
-      # - name: Create Kubernetes Configuration
-      #   run: |
-      #     oci ce cluster create-kubeconfig \
-      #       --cluster-id ${{ secrets.OKE_CLUSTER_OCID }} \
-      #       --file $HOME/.kube/config \
-      #       --region ap-mumbai-1 \
-      #       --token-version 2.0.0 \
-      #       --kube-endpoint PUBLIC_ENDPOINT
-
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
         id: test-configure-kubectl-oke-action
@@ -68,10 +59,13 @@ jobs:
       - name: Run Kubectl
         run: kubectl get nodes -A
 
+      - name: Install Oracle Database Cert Manager
+        run: |
+          kubectl apply -f cert-manager.yaml
+
       - name: Install Oracle Database Operator
         run: |
-          kubectl apply -f build_spec_with_operator.yaml --validate=false
-          timeout-minutes: 5 # Increase timeout if necessary
+          kubectl apply -f oracle-database-operator.yaml
 
       - name: Create file
         run: echo "${{ github.ref }}" > branch_info.txt
