@@ -63,9 +63,12 @@ jobs:
                               --query 'data.id' \
                               --wait-for-state SUCCEEDED \
                               --vcn-id $OCI_CLI_VCN_ID)
+          # Print the work request OCID
+          echo "Work Request OCID: $WORK_REQUEST_OCID"
           # Retrieve the cluster OCID from the completed work request
           CLUSTER_OCID=$(oci ce work-request get --work-request-id $WORK_REQUEST_OCID --query 'data.resources[0].identifier')
           echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
+
 
 
       # - name: List Availability Domains
