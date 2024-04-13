@@ -63,6 +63,7 @@ jobs:
                           --query 'data.id' \
                           --wait-for-state SUCCEEDED \
                           --vcn-id $OCI_CLI_VCN_ID)
+          echo "Cluster OCID: $CLUSTER_OCID"               
           echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
 
       # - name: List Availability Domains
@@ -73,8 +74,7 @@ jobs:
       # - name: Extract Availability Domain
       #   id: extract-availability-domain
       #   run: |
-      #     # Extracting the first availability domain from the output
-      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
+f      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
       #     echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
 
 
