@@ -50,47 +50,47 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
-      # - name: Create OKE Cluster
-      #   id: create-oke-cluster
+      - name: Create OKE Cluster
+        id: create-oke-cluster
+        run: |
+          # Extract the branch name from github.ref
+          CLUSTER_NAME=$(basename ${{ github.ref }})
+          # Create the OKE cluster with the random name and capture the OCID
+          CLUSTER_OCID=$(oci ce cluster create \
+                          --name $CLUSTER_NAME \
+                          --kubernetes-version "v1.29.1" \
+                          --compartment-id $OCI_CLI_COMPARTMENT_ID \
+                          --query 'data.id' \
+                          --wait-for-state SUCCEEDED \
+                          --vcn-id $OCI_CLI_VCN_ID)
+          echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
+
+      # - name: List Availability Domains
+      #   id: list-availability-domains
       #   run: |
-      #     # Extract the branch name from github.ref
-      #     CLUSTER_NAME=$(basename ${{ github.ref }})
-      #     # Create the OKE cluster with the random name and capture the OCID
-      #     CLUSTER_OCID=$(oci ce cluster create \
-      #                     --name $CLUSTER_NAME \
-      #                     --kubernetes-version "v1.29.1" \
-      #                     --compartment-id $OCI_CLI_COMPARTMENT_ID \
-      #                     --query 'data.id' \
-      #                     --wait-for-state SUCCEEDED \
-      #                     --vcn-id $OCI_CLI_VCN_ID)
-      #     echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
-
-      - name: List Availability Domains
-        id: list-availability-domains
-        run: |
-          oci iam availability-domain list --region $OCI_CLI_REGION
+      #     oci iam availability-domain list --region $OCI_CLI_REGION
           
-      - name: Extract Availability Domain
-        id: extract-availability-domain
-        run: |
-          # Extracting the first availability domain from the output
-          AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
-          echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
+      # - name: Extract Availability Domain
+      #   id: extract-availability-domain
+      #   run: |
+      #     # Extracting the first availability domain from the output
+      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
+      #     echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
 
 
-      - name: Create Node Pool
-        id: create-node-pool
-        run: |
-          AVAILABILITY_DOMAIN="${{ steps.extract-availability-domain.outputs.availability-domain }}"
-          echo $AVAILABILITY_DOMAIN
-          CLUSTER_OCID=ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaaafz6vmwi7dgj7ni4323l5mdie57vdspanbx7dp7l5cqwpblhxyga
-          oci ce node-pool create \
-            --name node-pool-1 \
-            --cluster-id $CLUSTER_OCID \
-            --node-image-name "Oracle-Linux-8.4" \
-            --node-shape "VM.Standard2.1" \
-            --compartment-id $OCI_CLI_COMPARTMENT_ID \
-            --wait-for-state SUCCEEDED
+      # - name: Create Node Pool
+      #   id: create-node-pool
+      #   run: |
+      #     AVAILABILITY_DOMAIN="${{ steps.extract-availability-domain.outputs.availability-domain }}"
+      #     echo $AVAILABILITY_DOMAIN
+      #     CLUSTER_OCID=ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaaafz6vmwi7dgj7ni4323l5mdie57vdspanbx7dp7l5cqwpblhxyga
+      #     oci ce node-pool create \
+      #       --name node-pool-1 \
+      #       --cluster-id $CLUSTER_OCID \
+      #       --node-image-name "Oracle-Linux-8.4" \
+      #       --node-shape "VM.Standard2.1" \
+      #       --compartment-id $OCI_CLI_COMPARTMENT_ID \
+      #       --wait-for-state SUCCEEDED
 
 
 
