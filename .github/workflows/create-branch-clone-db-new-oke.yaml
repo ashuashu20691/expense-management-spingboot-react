@@ -50,19 +50,19 @@ jobs:
         run: |
           echo ${{ steps.find-instances.outputs.output }} | jq .  
 
-      - name: Create OKE Cluster
-        id: create-oke-cluster
-        run: |
-          # Extract the branch name from github.ref
-          CLUSTER_NAME=$(basename ${{ github.ref }})
-          # Create the OKE cluster with the random name and capture the work request OCID
-          WORK_REQUEST_OCID=$(oci ce cluster create \
-                              --name $CLUSTER_NAME \
-                              --kubernetes-version "v1.29.1" \
-                              --compartment-id $OCI_CLI_COMPARTMENT_ID \
-                              --query 'data.id' \
-                              --wait-for-state SUCCEEDED \
-                              --vcn-id $OCI_CLI_VCN_ID)
+      # - name: Create OKE Cluster
+      #   id: create-oke-cluster
+      #   run: |
+      #     # Extract the branch name from github.ref
+      #     CLUSTER_NAME=$(basename ${{ github.ref }})
+      #     # Create the OKE cluster with the random name and capture the work request OCID
+      #     WORK_REQUEST_OCID=$(oci ce cluster create \
+      #                         --name $CLUSTER_NAME \
+      #                         --kubernetes-version "v1.29.1" \
+      #                         --compartment-id $OCI_CLI_COMPARTMENT_ID \
+      #                         --query 'data.id' \
+      #                         --wait-for-state SUCCEEDED \
+      #                         --vcn-id $OCI_CLI_VCN_ID)
 
       - name: Fetch OKE Cluster
         id: fetch-oke-cluster
@@ -110,11 +110,11 @@ jobs:
 
 
 
-      - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.3.2
-        id: test-configure-kubectl-oke-action
-        with:
-          cluster: ${{ env.OKE_CLUSTER_OCID }}
+        - name: Configure Kubectl
+          uses: oracle-actions/configure-kubectl-oke@v1.3.2
+          id: test-configure-kubectl-oke-action
+          with:
+            cluster: ${{ env.OKE_CLUSTER_OCID/\*\*\*/$OCI_CLI_REGION }}
 
 
       # Create OKE Cluster Environment
