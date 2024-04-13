@@ -63,12 +63,18 @@ jobs:
                               --query 'data.id' \
                               --wait-for-state SUCCEEDED \
                               --vcn-id $OCI_CLI_VCN_ID)
-          # Retrieve the work request details
-          WORK_REQUEST_DETAILS=$(oci ce work-request get --work-request-id $WORK_REQUEST_OCID --query 'data.{id:id, status:status}')
-          echo "Work Request Details: $WORK_REQUEST_DETAILS"
-          # Retrieve the cluster OCID from the completed work request
-          CLUSTER_OCID=$(echo $WORK_REQUEST_DETAILS | jq -r '.id')
+
+      - name: Fetch OKE Cluster
+        id: fetch-oke-cluster
+        run: |
+          # Extract the branch name from github.ref
+          CLUSTER_NAME=$(basename ${{ github.ref }})
+          # Loop until the cluster becomes active
+            CLUSTER_OCID=$(oci ce cluster list \
+                            --compartment-id $OCI_CLI_COMPARTMENT_ID \
+                            --query "data[?\"name\"=='$CLUSTER_NAME' && \"lifecycle-state\"=='ACTIVE'].id | [0]")
           echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
+
 
 
       # - name: List Availability Domains
@@ -103,7 +109,7 @@ jobs:
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
         id: test-configure-kubectl-oke-action
         with:
-          cluster: ${{ steps.create-oke-cluster.outputs.oke-cluster-ocid }}
+          cluster: ${{ steps.fetch-oke-cluster.outputs.oke-cluster-ocid }}
 
       # Create OKE Cluster Environment
       - name: Create OKE Cluster Environment
