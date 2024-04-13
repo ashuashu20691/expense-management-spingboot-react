@@ -110,7 +110,7 @@ jobs:
         run: |
           # Replace *** in the cluster ID with the region
           # CLUSTER_ID=$(echo "${{ env.OKE_CLUSTER_OCID }}" | sed "s/\\*\\*\\*/$OCI_CLI_REGION/")
-          oci ce cluster create-kubeconfig --cluster-id $CLUSTER_ID --region ap-mumbai-1 --token-version 2.0.0
+          oci ce cluster create-kubeconfig --cluster-id $CLUSTER_ID --region ap-mumbai-1
 
 
       # Create OKE Cluster Environment
