@@ -107,12 +107,11 @@ jobs:
 
 
 
-        - name: Configure Kubectl
-          uses: oracle-actions/configure-kubectl-oke@v1.3.2
-          id: test-configure-kubectl-oke-action
-          with:
-            cluster: ${{ env.OKE_CLUSTER_OCID/\*\*\*/$OCI_CLI_REGION }}
-
+      - name: Configure Kubectl
+        uses: oracle-actions/configure-kubectl-oke@v1.3.2
+        id: test-configure-kubectl-oke-action
+        with:
+          cluster: ${{ env.OKE_CLUSTER_OCID/$\{\{ secrets.OCI_CLI_REGION \}\}/$OCI_CLI_REGION }}
 
       # Create OKE Cluster Environment
       - name: Create OKE Cluster Environment
