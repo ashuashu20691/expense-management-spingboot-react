@@ -79,9 +79,6 @@ jobs:
           # Write the output to an environment file
           echo "OKE_CLUSTER_OCID=$CLUSTER_OCID" >> $GITHUB_ENV
 
-
-
-
       # - name: List Availability Domains
       #   id: list-availability-domains
       #   run: |
