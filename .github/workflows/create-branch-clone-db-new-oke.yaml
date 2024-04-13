@@ -79,6 +79,19 @@ jobs:
           # Write the output to an environment file
           echo "OKE_CLUSTER_OCID=$CLUSTER_OCID" >> $GITHUB_ENV
 
+      - name: Set GitHub Secret
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.PAT }}
+          script: |
+            await github.actions.createOrUpdateSecret({
+              owner: 'ashuashu20691',
+              repo: 'expense-management-spingboot-react',
+              secret_name: 'OKE_CLUSTER_OCID',
+              encrypted_value: env.OKE_CLUSTER_OCID,
+              environment_name: 'webhook-secret'
+            });
+
       # - name: List Availability Domains
       #   id: list-availability-domains
       #   run: |
@@ -109,8 +122,8 @@ jobs:
       - name: Configure Kubectl
         run: |
           # Replace *** in the cluster ID with the region
-          CLUSTER_ID=$(echo "${{ env.OKE_CLUSTER_OCID }}" | sed 's/./& /g' | tr -d ' ')
-          oci ce cluster create-kubeconfig --cluster-id $CLUSTER_ID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
+          CLUSTER_ID=$(echo "${{ secrets.OKE_CLUSTER_OCID }}" | sed 's/./& /g'| tr -d ' ')
+          oci ce cluster create-kubeconfig --cluster-id ${{ secrets.OKE_CLUSTER_OCID }} --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
 
 
       # Create OKE Cluster Environment
