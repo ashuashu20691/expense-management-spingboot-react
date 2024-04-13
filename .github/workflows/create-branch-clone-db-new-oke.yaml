@@ -74,7 +74,7 @@ jobs:
       # - name: Extract Availability Domain
       #   id: extract-availability-domain
       #   run: |
-f      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
+      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
       #     echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
 
 
