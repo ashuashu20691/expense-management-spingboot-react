@@ -73,6 +73,7 @@ jobs:
             CLUSTER_OCID=$(oci ce cluster list \
                             --compartment-id $OCI_CLI_COMPARTMENT_ID \
                             --query "data[?\"name\"=='$CLUSTER_NAME' && \"lifecycle-state\"=='ACTIVE'].id | [0]")
+          echo "--------- OCID ::: $CLUSTER_OCID"
           echo "::set-output name=oke-cluster-ocid::$CLUSTER_OCID"
 
 
