@@ -94,11 +94,14 @@ jobs:
 
 
 
-      - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.3.2
-        id: test-configure-kubectl-oke-action
-        with:
-          cluster: ${{ steps.create-oke-cluster.outputs.oke-cluster-ocid }}
+      - name: Configure Kubectl with OCI CLI
+        run: |
+          oci ce cluster create-kubeconfig \
+            --cluster-id ${{ steps.create-oke-cluster.outputs.oke-cluster-ocid }} \
+            --file $HOME/.kube/config \
+            --region ap-mumbai-1 \
+            --token-version 2.0.0
+
 
       # Create OKE Cluster Environment
       - name: Create OKE Cluster Environment
