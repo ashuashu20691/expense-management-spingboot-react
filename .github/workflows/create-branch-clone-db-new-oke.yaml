@@ -71,8 +71,9 @@ jobs:
           CLUSTER_NAME=$(basename ${{ github.ref }})
           # Loop until the cluster becomes active
           CLUSTER_OCID=$(oci ce cluster list \
-                          --compartment-id $OCI_CLI_COMPARTMENT_ID \
-                          --query "data[?\"name\"=='$CLUSTER_NAME' && \"lifecycle-state\"=='ACTIVE'].id | [0]")
+                         --compartment-id $OCI_CLI_COMPARTMENT_ID \
+                         --query "data[?name=='$CLUSTER_NAME' && lifecycle-state=='ACTIVE'].id | [0]" \
+                         --region $OCI_CLI_REGION --debug)
           # Replace *** in the CLUSTER_OCID with OCI_CLI_REGION
           # echo "--------- OCID ::: `$CLUSTER_OCID`"
           oci ce cluster create-kubeconfig --cluster-id $CLUSTER_OCID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
