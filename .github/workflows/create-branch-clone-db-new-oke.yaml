@@ -13,7 +13,7 @@ jobs:
       OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
       OCI_CLI_FINGERPRINT: ${{secrets.OCI_CLI_FINGERPRINT}}
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
-      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+      # OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
       OCI_CLI_COMPARTMENT_ID: ${{ secrets.OCI_CLI_COMPARTMENT_ID }}
       OCI_CLI_VCN_ID: ${{ secrets.OCI_CLI_VCN_ID }}
 
@@ -29,7 +29,7 @@ jobs:
         run : |
           echo "OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
           echo "OCI_CLI_FINGERPRINT: '${{ secrets.OCI_CLI_FINGERPRINT }}'" | sed 's/./& /g'
-          echo "OCI_CLI_REGION: '${{ secrets.OCI_CLI_REGION }}'" | sed 's/./& /g'
+          # echo "OCI_CLI_REGION: '${{ secrets.OCI_CLI_REGION }}'" | sed 's/./& /g'
           echo "OCI_CLI_TENANCY: '${{ secrets.OCI_CLI_TENANCY }}'" | sed 's/./& /g'
           echo $a | sed 's/./& /g'
     
