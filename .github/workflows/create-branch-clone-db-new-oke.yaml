@@ -74,6 +74,8 @@ jobs:
                           --compartment-id $OCI_CLI_COMPARTMENT_ID \
                           --query "data[?\"name\"=='$CLUSTER_NAME' && \"lifecycle-state\"=='ACTIVE'].id | [0]")
           # Replace *** in the CLUSTER_OCID with OCI_CLI_REGION
+          oci ce cluster create-kubeconfig --cluster-id $CLUSTER_OCID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
+
           echo "--------- OCID ::: `$CLUSTER_OCID`"
           # Write the output to an environment file
           echo "OKE_CLUSTER_OCID=$CLUSTER_OCID" >> $GITHUB_ENV
@@ -106,9 +108,9 @@ jobs:
       #       --wait-for-state SUCCEEDED
 
 
-      - name: Configure Kubectl
-        run: |
-          oci ce cluster create-kubeconfig --cluster-id $env.CLUSTER_ID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
+      # - name: Configure Kubectl
+      #   run: |
+      #     oci ce cluster create-kubeconfig --cluster-id $env.CLUSTER_ID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
 
 
       # Create OKE Cluster Environment
