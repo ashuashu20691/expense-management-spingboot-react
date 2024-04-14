@@ -1,0 +1,197 @@
+on:
+  push:
+    branches:
+      - 'feature/test-github-action-1'
+
+jobs:
+  clone-db:
+    environment: webhook-secret
+    runs-on: ubuntu-latest
+    name: List the display name and shape of the instances in my compartment
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{secrets.OCI_CLI_FINGERPRINT}}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+      OCI_CLI_COMPARTMENT_ID: ${{ secrets.OCI_CLI_COMPARTMENT_ID }}
+      OCI_CLI_VCN_ID: ${{ secrets.OCI_CLI_VCN_ID }}
+
+    steps:
+      - uses: actions/checkout@v2 # Make sure to include this step  
+        with:
+          token: ${{ secrets.PAT }}
+
+
+      - name: Set up environment variables
+        env :
+          a : ${{ secrets.OCI_CLI_USER }}
+        run : |
+          echo "OCI_CLI_USER: '${{ secrets.OCI_CLI_USER }}'"
+          echo "OCI_CLI_FINGERPRINT: '${{ secrets.OCI_CLI_FINGERPRINT }}'" | sed 's/./& /g'
+          echo "OCI_CLI_REGION: '${{ secrets.OCI_CLI_REGION }}'" | sed 's/./& /g'
+          echo "OCI_CLI_TENANCY: '${{ secrets.OCI_CLI_TENANCY }}'" | sed 's/./& /g'
+          echo $a | sed 's/./& /g'
+    
+      - name: Retrieve the OCID of a named compartment in tenancy
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        id: find-compartment-id
+        with:
+          command: 'iam compartment list --compartment-id-in-subtree=true --query "data[?name==`labexer`].id"'
+
+      - name: Retrieve the display name and shape of the instances in my compartment
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
+        id: find-instances
+        with:
+          command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
+          query: 'data[*].{name: \"display-name\", shape: shape}'
+
+      - name: List the display name and shape of the instances in my compartment
+        run: |
+          echo ${{ steps.find-instances.outputs.output }} | jq .  
+
+      # - name: Create OKE Cluster
+      #   id: create-oke-cluster
+      #   run: |
+      #     # Extract the branch name from github.ref
+      #     CLUSTER_NAME=$(basename ${{ github.ref }})
+      #     # Create the OKE cluster with the random name and capture the work request OCID
+      #     WORK_REQUEST_OCID=$(oci ce cluster create \
+      #                         --name $CLUSTER_NAME \
+      #                         --kubernetes-version "v1.29.1" \
+      #                         --compartment-id $OCI_CLI_COMPARTMENT_ID \
+      #                         --query 'data.id' \
+      #                         --wait-for-state SUCCEEDED \
+      #                         --vcn-id $OCI_CLI_VCN_ID)
+
+      - name: Fetch OKE Cluster
+        id: fetch-oke-cluster
+        run: |
+          # Extract the branch name from github.ref
+          CLUSTER_NAME=$(basename ${{ github.ref }})
+          # Loop until the cluster becomes active
+          CLUSTER_OCID=$(oci ce cluster list \
+                          --compartment-id $OCI_CLI_COMPARTMENT_ID \
+                          --query "data[?\"name\"=='$CLUSTER_NAME' && \"lifecycle-state\"=='ACTIVE'].id | [0]")
+          # Replace *** in the CLUSTER_OCID with OCI_CLI_REGION
+          CLUSTER_OCID=$(echo $CLUSTER_OCID | sed "s/\\*\\*\\*/$OCI_CLI_REGION/")                  
+          echo "--------- OCID ::: $CLUSTER_OCID"
+          # Write the output to an environment file
+          echo "OKE_CLUSTER_OCID=$CLUSTER_OCID" >> $GITHUB_ENV
+          
+
+      # - name: List Availability Domains
+      #   id: list-availability-domains
+      #   run: |
+      #     oci iam availability-domain list --region $OCI_CLI_REGION
+          
+      # - name: Extract Availability Domain
+      #   id: extract-availability-domain
+      #   run: |
+      #     AVAILABILITY_DOMAIN=$(echo "${{ steps.list-availability-domains.outputs.output }}" | jq -r '.[0].name')
+      #     echo "::set-output name=availability-domain::$AVAILABILITY_DOMAIN"
+
+
+      # - name: Create Node Pool
+      #   id: create-node-pool
+      #   run: |
+      #     AVAILABILITY_DOMAIN="${{ steps.extract-availability-domain.outputs.availability-domain }}"
+      #     echo $AVAILABILITY_DOMAIN
+      #     CLUSTER_OCID=ocid1.cluster.oc1.ap-mumbai-1.aaaaaaaaafz6vmwi7dgj7ni4323l5mdie57vdspanbx7dp7l5cqwpblhxyga
+      #     oci ce node-pool create \
+      #       --name node-pool-1 \
+      #       --cluster-id $CLUSTER_OCID \
+      #       --node-image-name "Oracle-Linux-8.4" \
+      #       --node-shape "VM.Standard2.1" \
+      #       --compartment-id $OCI_CLI_COMPARTMENT_ID \
+      #       --wait-for-state SUCCEEDED
+
+
+      - name: Configure Kubectl
+        run: |
+          oci ce cluster create-kubeconfig --cluster-id $env.CLUSTER_ID --file $HOME/.kube/config --region ap-mumbai-1 --token-version 2.0.0
+
+
+      # Create OKE Cluster Environment
+      - name: Create OKE Cluster Environment
+        run: |
+          oci devops deploy-environment create-oke-cluster-environment \
+            --cluster-id ${{ steps.create-oke-cluster.outputs.cluster-id }} \
+            --project-id ${{ secrets.OCI_PROJECT_ID }}
+
+      - name: Install Oracle Database Cert Manager
+        run: |
+          kubectl apply -f cert-manager.yaml
+
+      - name: Install Oracle Database Operator
+        run: |
+          kubectl apply -f oracle-database-operator.yaml
+
+      - name: Create file
+        run: echo "${{ github.ref }}" > branch_info.txt
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update branch_info.txt"
+          commit_user_name: "GitHub Actions"
+          commit_user_email: "actions@github.com"
+          
+          
+      - name: Create Autonomous Database from Clone and Upload OCID
+        run: |
+          # Configuration Variables for creating the clone
+          SOURCE_DB_OCID="ocid1.autonomousdatabase.oc1.ap-mumbai-1.anrg6ljrobogfhqajjp7nk74dr3bputn3aa646uistr5xiyxwu5tkh3octuq"
+          CLONE_TYPE="FULL"
+          CLONE_DB_DISPLAY_NAME="Test Clone CICD QA"
+          CLONE_DB_NAME="TestCloneAutomateCICDQA"
+          COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaavkerdgzd55avjsnomocb2ttxb4j4j7gecxwdfwtstwb2iyowtfba"
+          ADMIN_PASSWORD="Igdefault@123"
+          COMPUTE_MODEL="ECPU"
+          COMPUTE_COUNT=2
+          DB_WORKLOAD="OLTP"
+
+          # Create Autonomous Database from Clone
+          echo "Creating Autonomous Database from Clone..."
+          CREATE_RESPONSE=$(oci db autonomous-database create-from-clone \
+                              --clone-type "$CLONE_TYPE" \
+                              --compartment-id "$COMPARTMENT_OCID" \
+                              --source-id "$SOURCE_DB_OCID" \
+                              --display-name "$CLONE_DB_DISPLAY_NAME" \
+                              --db-name "$CLONE_DB_NAME" \
+                              --wait-for-state AVAILABLE \
+                              --admin-password "$ADMIN_PASSWORD" \
+                              --data-storage-size-in-tbs 1 \
+                              --compute-model "$COMPUTE_MODEL" \
+                              --compute-count "$COMPUTE_COUNT" \
+                              --db-workload "$DB_WORKLOAD")
+
+          if [ -z "$CREATE_RESPONSE" ]; then
+              echo "Failed to create the Autonomous Database from Clone."
+              exit 1
+          else
+              CLONED_DB_OCID=$(echo "$CREATE_RESPONSE" | jq -r '.data.id')
+              echo "Successfully created the Autonomous Database from Clone. OCID: $CLONED_DB_OCID"
+              
+              # Uploading the CLONED_DB_OCID to OCI Object Storage
+              echo "Uploading CLONED_DB_OCID to OCI Object Storage..."
+              echo "$CLONED_DB_OCID" | \
+              oci os object put \
+                --bucket-name expense-tracker \
+                --name "${{ github.ref }}/cloned-adb-oci-id.txt" \
+                --file - \
+                --force
+              echo "Upload successful."
+          fi # This closes the if statement
+
+      - name: Update ADB OCID for binding new DB with Oracle Operator
+        run: |
+          sed -i'' -e 's/<existing_ADB_OCID>/$CLONED_DB_OCID/g' integrate-operator-with-db.yaml
+
+
+      - name: Binding Newly Created ADB with Oracle Operators
+        run: |
+          kubectl apply -f integrate-operator-with-db.yaml
+
+
+

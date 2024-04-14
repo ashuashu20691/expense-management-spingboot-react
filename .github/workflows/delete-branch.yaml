@@ -1,0 +1,27 @@
+on:
+  delete:
+    branches:
+      - 'feature/**'
+
+jobs:
+  delete-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up environment variables
+        run: |
+          echo "OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}" >> $GITHUB_ENV
+          echo "OCI_CLI_TENANCY=${{ secrets.OCI_CLI_TENANCY }}" >> $GITHUB_ENV
+          echo "OCI_CLI_FINGERPRINT=${{ secrets.OCI_CLI_FINGERPRINT }}" >> $GITHUB_ENV
+          echo "OCI_CLI_KEY_CONTENT=${{ secrets.OCI_CLI_KEY_CONTENT }}" >> $GITHUB_ENV
+          echo "OCI_CLI_REGION=${{ secrets.OCI_CLI_REGION }}" >> $GITHUB_ENV
+          echo "BRANCH_REF=${{ github.event.ref }}" >> $GITHUB_ENV
+
+      - name: Configure Kubectl
+        uses: oracle-actions/configure-kubectl-oke@v1.3.2
+        with:
+          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+      - name: Delete resources
+        run: |
+          kubectl delete singleinstancedatabase db-${{ steps.getname.outputs.idname }} -n feature-${{ steps.getname.outputs.idname }}
+          kubectl delete namespace feature-${{ steps.getname.outputs.idname }}

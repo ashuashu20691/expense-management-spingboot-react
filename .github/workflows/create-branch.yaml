@@ -1,0 +1,78 @@
+on:
+  create:
+    branches:
+      - 'feature/**'
+
+jobs:
+  create-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up environment variables
+        run: |
+          echo "OCI_CLI_USER=${{ secrets.OCI_CLI_USER }}" >> $GITHUB_ENV
+          echo "OCI_CLI_TENANCY=${{ secrets.OCI_CLI_TENANCY }}" >> $GITHUB_ENV
+          echo "OCI_CLI_FINGERPRINT=${{ secrets.OCI_CLI_FINGERPRINT }}" >> $GITHUB_ENV
+          echo "OCI_CLI_KEY_CONTENT=${{ secrets.OCI_CLI_KEY_CONTENT }}" >> $GITHUB_ENV
+          echo "OCI_CLI_REGION=${{ secrets.OCI_CLI_REGION }}" >> $GITHUB_ENV
+          echo "BRANCH_REF=${{ github.event.ref }}" >> $GITHUB_ENV
+
+      - name: Configure Kubectl
+        uses: oracle-actions/configure-kubectl-oke@v1.3.2
+        with:
+          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+      - name: Set up Kustomize
+        run: |
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Deploy SIDB
+        run: |
+          kustomize create --resources base/sidb-xe
+          kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
+          kustomize edit set namespace feature-${{ steps.getname.outputs.idname }}
+          kustomize build . | kubectl apply -f -
+
+      - name: Wait for Database
+        id: getready
+        run: |
+          ./scripts/checkdb.sh ${{ steps.getname.outputs.idname }}
+
+      - name: Retrieve IP
+        id: getaddress
+        run: |
+          echo "ipaddress=$(kubectl get -n feature-${{ steps.getname.outputs.idname }} singleinstancedatabase db-${{ steps.getname.outputs.idname }} -o 'jsonpath={.status.pdbConnectString}')" >> "$GITHUB_ENV"
+
+  setup_users:
+    needs: create-db
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run LB as system
+        uses: liquibase-github-actions/update@v4.23.2
+        with:
+          changelogFile: "changelog.xml"
+          url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
+          username: "system"
+          password: ${{ secrets.DB_PWD }}
+          searchPath: "/github/workspace/liquibase/admin"
+
+  setup_tables:
+    needs: setup_users
+    runs-on: ubuntu-latest
+    steps:
+      - name: List schemas
+        id: getschemas
+        run: |
+          echo "schemas=$(python scripts/run_util.py schemas liquibase)" >> "$GITHUB_ENV"
+      
+      - name: Run LB as User
+        uses: liquibase-github-actions/update@v4.23.2
+        with:
+          changelogFile: "changelog.xml"
+          url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
+          username: ${{ format('system[{0}]', needs.setup_users.outputs.schemas) }}
+          password: ${{ secrets.DB_PWD }}
+          searchPath: ${{ format('/github/workspace/liquibase/{0}', needs.setup_users.outputs.schemas) }}

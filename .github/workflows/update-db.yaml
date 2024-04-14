@@ -1,0 +1,28 @@
+name: CI/CD Pipeline DB Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Other build steps here...
+
+      - name: Update Database
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          liquibase --changeLogFile=db/changelog/changelog-master.xml \
+                    --url="${DB_URL}" \
+                    --username="${DB_USERNAME}" \
+                    --password="${DB_PASSWORD}" \
+                    update
