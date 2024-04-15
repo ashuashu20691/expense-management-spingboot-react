@@ -4,5 +4,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <include file="/db/changelog/changes/create-table-emp-changelog.xml"/>
     <include file="/db/changelog/changes/create-table-employee-changelog.xml"/>
+    <include file="/db/changelog/changes/add-description-expenses.xml"/>
 
 </databaseChangeLog>
