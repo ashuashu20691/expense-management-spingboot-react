@@ -20,6 +20,8 @@ const Dashboard = () => {
   const [lastMonthSpent, setLastMonthSpent] = useState([]);
   const [lastWeekSpent, setLastWeekSpent] = useState([]);
   const [totalSpent, setTotalSpent] = useState([]);
+  const [topSpent, setTopSpent] = useState([]);
+
   const [predNextMonthSpent, setPredNextMonthSpent] = useState([]);
   const [deployVersion, setDeployVersion] = useState([]);
 
@@ -28,6 +30,12 @@ const Dashboard = () => {
       .then(response => response.json())
       .then(data => setLastMonthSpent(data))
       .catch(error => console.error('Error fetching expense data:', error));
+
+      fetch(apiUrl + '/api/expenses/top-spent')
+      .then(response => response.json())
+      .then(data => setTopSpent(data))
+      .catch(error => console.error('Error fetching expense data:', error));
+
 
     fetch(apiUrl + '/api/expenses/last-week-expense')
     .then(response => response.json())
@@ -91,6 +99,17 @@ const Dashboard = () => {
       <Box mt="20px" display="flex" justifyContent="space-between">
         {/* Email Statistics */}
         <Box bgcolor={colors.primary} p="20px" flex="1">
+          <Typography variant="h6" color={colors.grey} gutterBottom>Top Spent This Month</Typography>
+          <Box display="flex" alignItems="center">
+          <MoneyOff sx={{ color: colors.greenAccent, fontSize: '2rem', marginRight: '10px' }} />
+            <Box>
+              <Typography variant="h4">{topSpent}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        
+          {/* Email Statistics */}
+        <Box bgcolor={colors.primary} p="20px" flex="1" ml="20px">
           <Typography variant="h6" color={colors.grey} gutterBottom>Last Month Spent</Typography>
           <Box display="flex" alignItems="center">
           <MoneyOff sx={{ color: colors.greenAccent, fontSize: '2rem', marginRight: '10px' }} />

@@ -23,6 +23,10 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     @Query(value = "SELECT SUM(amount) FROM expenses WHERE expense_date >= TRUNC(SYSDATE) - INTERVAL '7' DAY AND expense_date < TRUNC(SYSDATE) - INTERVAL '1' DAY", nativeQuery = true)
     Integer findSumOfLastWeekExpenses();
+
+    @Query(value = "SELECT amount FROM expenses WHERE TO_CHAR(expense_date, 'YYYYMM') = TO_CHAR(CURRENT_DATE, 'YYYYMM') ORDER BY amount DESC FETCH FIRST 1 ROW ONLY", nativeQuery = true)
+    Integer findHighestSpentAmountThisMonth();
+    
     
     @Query("SELECT SUM(e.amount) FROM Expense e WHERE e.expenseDate <= TRUNC(SYSDATE)")
     Integer findTotalExpenseTillNow();

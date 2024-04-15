@@ -59,6 +59,13 @@ jobs:
       - name: Run Kubectl
         run: kubectl get nodes -A
 
+      # Create OKE Cluster Environment
+      - name: Create OKE Cluster Environment
+        run: |
+          oci devops deploy-environment create-oke-cluster-environment \
+            --cluster-id ${{ secrets.OKE_CLUSTER_OCID }} \
+            --project-id ${{ secrets.OCI_PROJECT_ID }}        
+
       - name: Install Oracle Database Cert Manager
         run: |
           kubectl apply -f cert-manager.yaml

@@ -70,11 +70,16 @@ public class ExpenseController {
         }
     }
 
-
     @GetMapping("/group-by-category")
     public ResponseEntity<List<MonthlyExpenseOverviewDTO>> getMonthlyExpenseOverview() {
         List<MonthlyExpenseOverviewDTO> expenses = expenseService.getCategoryExpenseOverview();
         return new ResponseEntity<>(expenses, HttpStatus.OK);
+    }
+
+    @GetMapping("/top-spent")
+    public ResponseEntity<Integer> getTopSpent() {
+        Integer sum = expenseRepository.findHighestSpentAmountThisMonth();
+        return new ResponseEntity<>(sum, HttpStatus.OK);
     }
 
     @GetMapping("/last-week-expense")
