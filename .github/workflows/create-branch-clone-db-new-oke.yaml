@@ -193,5 +193,32 @@ jobs:
         run: |
           kubectl apply -f integrate-operator-with-db.yaml
 
+      - name: Download Oracle Wallet
+        env:
+          WALLET_PASSWORD: ${{ secrets.WALLET_PASSWORD }}
+          ADB_ID: ${{ secrets.ADB_ID }}
+        run: |
+          echo "Downloading Oracle Wallet for ADB..."
+          oci db autonomous-database generate-wallet --autonomous-database-id $ADB_ID --file /tmp/wallet.zip --password "$WALLET_PASSWORD"
 
+      - name: Unzip Oracle Wallet
+        run: |
+          unzip -P "$WALLET_PASSWORD" -o /tmp/wallet.zip -d /wallet
+          echo "Oracle Wallet has been unzipped."
+
+      - name: Setup Database Environment Variables
+        run: |
+          echo "TNS_ADMIN=/wallet" >> $GITHUB_ENV
+          echo "TNS_SERVICE_NAME=${{ secrets.TNS_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "DB_USERNAME=todouser" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_URL=jdbc:oracle:thin:@${{ secrets.TNS_SERVICE_NAME }}_tp?TNS_ADMIN=/wallet" >> $GITHUB_ENV
+
+      - name: Install Liquibase and Run Update
+        run: |
+          curl -L https://github.com/liquibase/liquibase/releases/download/v4.9.1/liquibase-4.9.1.tar.gz | tar xz -C /opt
+          wget https://download.oracle.com/otn-pub/otn_software/jdbc/211/ojdbc8-full.tar.gz -O /tmp/ojdbc8-full.tar.gz
+          tar -xzf /tmp/ojdbc8-full.tar.gz -C /opt/liquibase/lib --strip-components=1 ojdbc8-full/ojdbc8.jar
+          chmod +x /opt/liquibase/liquibase
+          /opt/liquibase/liquibase --url="${{ env.DB_URL }}" --changeLogFile=src/main/resources/db/changelog/master.xml --username=${{ env.DB_USERNAME }} --password=${{ env.DB_PASSWORD }} update
 
