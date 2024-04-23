@@ -43,6 +43,7 @@ const Expenses = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID' },
+    { field: 'title', headerName: 'Title', flex: 1 },
     { field: 'category', headerName: 'Category', flex: 1 },
     { field: 'amount', headerName: 'Amount', type: 'number' },
     { field: 'expenseDate', headerName: 'Expense Date', flex: 1 },

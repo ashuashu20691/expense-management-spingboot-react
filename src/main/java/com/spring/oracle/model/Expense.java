@@ -23,10 +23,12 @@ public class Expense {
     
     @Column(length = 255)
     private String category;
- 
+
+    @Column(length = 255)
+    private String title;
+    
     @Column(length = 255)
     private String description;
- 
     
     @Column(precision = 19, scale = 2)
     private BigDecimal amount;
@@ -69,6 +71,15 @@ public class Expense {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 
     public BigDecimal getAmount() {
         return amount;

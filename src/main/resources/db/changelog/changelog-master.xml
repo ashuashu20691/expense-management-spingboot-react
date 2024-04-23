@@ -5,5 +5,6 @@
     <include file="/db/changelog/changes/create-table-emp-changelog.xml"/>
     <include file="/db/changelog/changes/create-table-employee-changelog.xml"/>
     <include file="/db/changelog/changes/add-description-expenses.xml"/>
+    <include file="/db/changelog/changes/add-title-field-expense.xml"/>
 
 </databaseChangeLog>
