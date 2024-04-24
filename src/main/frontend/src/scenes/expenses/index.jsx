@@ -73,7 +73,7 @@ const Expenses = () => {
       <Helmet>
         <title>Expenses | Expense Tracker</title>
       </Helmet>
-      <Header title="EXPENSES" subtitle="List of Expenses" />
+      <Header title="EXPENSES V2" subtitle="List of Expenses" />
       <Box
         m="30px 0 0 0"
         height="75vh"
