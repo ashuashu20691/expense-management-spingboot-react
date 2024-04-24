@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the pom.xml file to the container
 COPY pom.xml .
 
-# Download the dependencies only if the pom.xml has changed
-RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
+# Download the dependencies
+RUN mvn dependency:go-offline -B
 
 # Copy the project source code to the container
 COPY src src
