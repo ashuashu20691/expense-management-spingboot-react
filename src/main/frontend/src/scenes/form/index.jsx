@@ -11,6 +11,7 @@ const ExpenseForm = () => {
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
@@ -22,6 +23,7 @@ const ExpenseForm = () => {
       amount: parseFloat(amount),
       expenseDate: date,
       description,
+      title,
     };
 
     // Send the data to the API
@@ -66,6 +68,15 @@ const ExpenseForm = () => {
             onChange={(event) => setCategory(event.target.value)}
           />
         </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Title"
+            required
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </Grid>        
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth

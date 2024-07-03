@@ -43,6 +43,7 @@ const Expenses = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID' },
+    { field: 'title', headerName: 'Title', flex: 1 },
     { field: 'category', headerName: 'Category', flex: 1 },
     { field: 'amount', headerName: 'Amount', type: 'number' },
     { field: 'expenseDate', headerName: 'Expense Date', flex: 1 },
@@ -72,7 +73,7 @@ const Expenses = () => {
       <Helmet>
         <title>Expenses | Expense Tracker</title>
       </Helmet>
-      <Header title="EXPENSES" subtitle="List of Expenses" />
+      <Header title="EXPENSES V2" subtitle="List of Expenses" />
       <Box
         m="30px 0 0 0"
         height="75vh"
